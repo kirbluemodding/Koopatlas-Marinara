@@ -1,8 +1,10 @@
-# Koopatlas ("Koopatlas-Updated" fork)
+# Koopatlas Updated ("Koopatlas-$${\color{red}Marinara}$$" fork)
 
 An editor for world maps for the custom Koopatlas Engine for New Super Mario Bros. Wii, created by Treeki.
 
-The "Koopatlas-Updated" fork aims to keep Koopatlas compatible with the latest versions of its dependencies, and to fix bugs and make minor improvements. Pull requests that make large changes to how the editor works or add major features will be declined — please make your own fork for that.
+Koopatlas $${\color{red}Marinara}$$ contains a few enhancements for Koopatlas Updated, including PyQt6 support, and whatever else I can come up with.
+
+If you have any ideas or suggestions for features/bugfixes, feel free to create an issue and let me know.
 
 ## Original readme below
 
