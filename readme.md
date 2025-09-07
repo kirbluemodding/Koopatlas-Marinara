@@ -1,4 +1,4 @@
-# Koopatlas Updated ("Koopatlas-$${\color{red}Marinara}$$" fork)
+# Koopatlas Updated ("Koopatlas-Marinara" fork)
 
 An editor for world maps for the custom Koopatlas Engine for New Super Mario Bros. Wii, created by Treeki.
 
