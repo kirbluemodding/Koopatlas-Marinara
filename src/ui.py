@@ -1199,9 +1199,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
         w.addAction(doodadAction)
 
         h = mb.addMenu('Help')
-        self.ha = h.addAction('About Koopatlas',            self.aboutDialog)
-        self.hb = h.addAction('Koopatlas Documentation',    self.goToHelp)
-        # self.hc = h.addAction('Keyboard Shortcuts')
+        self.ha = h.addAction('About',            self.aboutDialog)
+        self.hb = h.addAction('Documentation',    self.goToHelp)
+        self.hc = h.addAction('Keyboard Shortcuts', self.keyboardShortcuts)
 
     def setupDocks(self):
         self.layerList = KPLayerList()
@@ -1741,9 +1741,17 @@ class KPMainWindow(QtWidgets.QMainWindow):
 # Help
 ########################
     def aboutDialog(self):
-        caption = "About Koopatlas"
+        caption = "About Koopatlas Marinara"
 
         text = "<big><b>Koopatlas</b></big><br><br>    The Koopatlas Editor is an editor for custom two dimensional world maps, for use with the Newer SMBWii world map engine. It should be included with its companion program, Koopuzzle, which will create tilesets compatible with Koopatlas.<br><br>    Koopatlas was programmed by Treeki and Tempus of the Newer Team.<br><br>    Find the website at html://www.newerteam.com for more information."
+
+
+        msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)
+
+    def keyboardShortcuts(self):
+        caption = "Keyboard Shortcuts"
+
+        text = "todo: actually add this lol"
 
 
         msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)

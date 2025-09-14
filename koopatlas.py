@@ -1,8 +1,10 @@
 #!/usr/bin/env python2
 
-# Koopatlas
+# Koopatlas Marinara Edition
 # A project by Treeki and Tempus
-# Started 2nd November 2011
+# Based off of Koopatlas Updated by RoadrunnerWMC
+# Further upgraded by Kirblue with support from friends
+# Started September 12th 2025
 
 import os, os.path, sys
 
