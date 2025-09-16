@@ -19,8 +19,8 @@ preferances_default = """
 [Window]
 grid_type = 0
 
-[Jaja]
-WHAT = null
+[File]
+LastMapOpen =
 """
 class settings:
     config = configparser.ConfigParser()

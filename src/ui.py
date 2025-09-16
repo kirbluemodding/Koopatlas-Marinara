@@ -1104,6 +1104,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
         self.setupDocks()
         self.setupMenuBar()
+        self.setupStatusBar()
 
         self.refreshMapState()
 
@@ -1120,6 +1121,21 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self._createAction('open', self.openMap, '&Open...')
         self._createAction('save', self.saveMap, '&Save')
         self._createAction('saveAs', self.saveMapAs, 'Save &As...')
+
+    # scrapped
+    def setupStatusBar(self):
+        self.status_bar = self.statusBar()
+        self.caps_lock_label = QtWidgets.QLabel("Caps Lock: OFF") # lmao
+        self.loadbar = QtWidgets.QProgressBar()
+        self.loadbar.setMinimum(0)
+        #self.loadbar.setValue(10)
+        self.status_bar.addPermanentWidget(self.loadbar)
+
+    def loadLastMap(self):
+        target = settings.config["File"]["LastMapOpen"]
+        if len(target) != 0:
+            print("Opening your last used map...\nThis feature can be disabled in the settings.")
+            self.openMapFromPath(target)
 
     def setupMenuBar(self):
         mb = self.menuBar()
@@ -1373,7 +1389,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         if len(doodadList) > 1:
             suffix = 's'
         self.anmOptsDock.setWindowTitle("Editing {0} Doodad{1}".format(len(doodadList), suffix))
-        self.anmOpts.setupAnms(doodadList)
+        self.anmOpts.setupAnms(doodadList)          
 
 
 ########################
@@ -1393,24 +1409,18 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
         target = unicode(QFileDialog_getOpenFileName(
             self, 'Open Map', '', 'Koopatlas map (*.kpmap)'))
-
-        if len(target) == 0:
+        if len(target) == 0: 
+            QtWidgets.QMessageBox.error(self, "Error", "Pick out a vaild file to load, please.")
             return
+        settings.config["File"]["LastMapOpen"] = target
 
-        import mapfile
-        with open(target, 'rb') as file:
-            obj = mapfile.load(file.read())
-        obj.filePath = target
-        KP.map = obj
-        KP.map.filePath = target
-        self.refreshMapState()
+        self.openMapFromPath(target)
 
     def openRecent(self):
-        
-        target = settings.config["File"]["LastMapOpen"]
-        if len(target) == 0:
-            return
+        #self.openMapFromPath(target)
+        QtWidgets.QMessageBox.information(self, "Not Quite...", "This feature is planned for a later release. For now, enjoy opening files manually.")
 
+    def openMapFromPath(self, target):
         import mapfile
         with open(target, 'rb') as file:
             obj = mapfile.load(file.read())
@@ -1418,7 +1428,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
         KP.map = obj
         KP.map.filePath = target
         self.refreshMapState()
-        #QtWidgets.QMessageBox.information(self, "Not Quite...", "This feature is planned for a later release. For now, enjoy opening files manually.")
 
     def settingsMenu(self):
         QtWidgets.QMessageBox.information(self, "Not Quite...", "A full settings menu is planned for a later release. For now, enjoy the program only remembering select things on the tool-bar...")

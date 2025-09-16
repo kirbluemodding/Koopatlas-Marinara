@@ -1,3 +1,4 @@
 *.pyc
-
+koopatlas.ini
+*.kpmap
 __pycache__

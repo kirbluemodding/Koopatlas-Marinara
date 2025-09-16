@@ -2,6 +2,13 @@ from common import *
 from settings import *
 import time
 
+WAITING = """
+--------------------------------
+------ Koopatlas Marinara ------
+--------------------------------
+
+"""
+
 class KP:
     @staticmethod
     def run():
@@ -27,10 +34,12 @@ class KP:
         from ui import KPMainWindow
 
         KP.mainWindow = KPMainWindow()
-        KP.mainWindow.show()
-
+    
         KP.enumerateTilesets()
-        
+        print(WAITING)
+        KP.mainWindow.loadLastMap()
+
+        KP.mainWindow.show()
         app_exec(KP.app)
         # we can assume this is on program end or alt f4
         # saves configs
@@ -110,7 +119,8 @@ class KP:
         cls.loadedTilesets[name] = KPTileset.loadFromArc(data)
 
         e = time.time()
-        print("Loading set: {0} in {1}".format(name, e-b))
+        #print("Loading set: {0} in {1}".format(name, e-b))
+        #KP.mainWindow.status_bar.showMessage("Loading set: {0} in {1}".format(name, e-b), 4000)
 
         return True
 

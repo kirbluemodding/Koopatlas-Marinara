@@ -93,7 +93,20 @@ def load(string):
 
     root = json.loads(string.decode('utf-8'), object_hook=_loadObject)
 
+    # variables
+    total = 0
+    n = 0
+    # make sure this thing is at zero so, uh, yeah it'll actually load
+    KP.mainWindow.loadbar.setValue(0)
+    # count number of objects in map
     for obj, source in needsSpecialCare:
+        total += 1
+    # now set the max value of the load bar to that
+    KP.mainWindow.loadbar.setMaximum(total)
+    # load
+    for obj, source in needsSpecialCare:
+        n += 1
+        KP.mainWindow.loadbar.setValue(n)
         obj._load(root, source)
 
     return root
