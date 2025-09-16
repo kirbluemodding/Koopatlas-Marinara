@@ -4,6 +4,7 @@ from math import floor, ceil
 from .objects import *
 from .doodads import *
 from .paths import *
+from settings import *
 
 class KPMapScene(QtWidgets.QGraphicsScene):
     def __init__(self):
@@ -22,8 +23,8 @@ class KPMapScene(QtWidgets.QGraphicsScene):
         self.ticker.setFrameRange(0,100000)
         self.ticker.valueChanged.connect(self.viewportUpdateProxy)
         self.ticker.setUpdateInterval(round(1000/60.0))
-
-        self.grid = False
+        
+        self.grid = int(settings.config["Window"]["grid_type"])
 
         # create an item for everything in the map
         for layer in KP.map.layers:
@@ -72,91 +73,152 @@ class KPMapScene(QtWidgets.QGraphicsScene):
     def viewportUpdateProxy(self):
         self.views()[0].viewport().update()
 
-
     def drawForeground(self, painter, rect):
-        if not self.grid: return
-
+        if self.grid == 0: return # 2 is unfinished but will be copied from Reggie next
+        GridColor = QtGui.QColor.fromRgb(255,255,255,100) # if we add themes this is a var for that
         Zoom = KP.mainWindow.ZoomLevel
         drawLine = painter.drawLine
+        if self.grid == 1:
+            # NOTE: this is still the roadrunnerslop as it's the exact same in reggie
+            if Zoom >= 4:
+                startx = rect.x()
+                startx -= (startx % 24)
+                endx = startx + rect.width() + 24
 
-        if Zoom >= 4:
+                starty = rect.y()
+                starty -= (starty % 24)
+                endy = starty + rect.height() + 24
+
+                painter.setPen(QtGui.QPen(GridColor, 1, Qt.PenStyle.DotLine))
+
+                x = startx
+                y1 = rect.top()
+                y2 = rect.bottom()
+                while x <= endx:
+                    drawLine(QtCore.QLineF(x, starty, x, endy))
+                    x += 24
+
+                y = starty
+                x1 = rect.left()
+                x2 = rect.right()
+                while y <= endy:
+                    drawLine(QtCore.QLineF(startx, y, endx, y))
+                    y += 24
+
+
+            if Zoom >= 2:
+                startx = rect.x()
+                startx -= (startx % 96)
+                endx = startx + rect.width() + 96
+
+                starty = rect.y()
+                starty -= (starty % 96)
+                endy = starty + rect.height() + 96
+
+                painter.setPen(QtGui.QPen(GridColor, 1, Qt.PenStyle.DashLine))
+
+                x = startx
+                y1 = rect.top()
+                y2 = rect.bottom()
+                while x <= endx:
+                    drawLine(QtCore.QLineF(x, starty, x, endy))
+                    x += 96
+
+                y = starty
+                x1 = rect.left()
+                x2 = rect.right()
+                while y <= endy:
+                    drawLine(QtCore.QLineF(startx, y, endx, y))
+                    y += 96
+
+
             startx = rect.x()
-            startx -= (startx % 24)
-            endx = startx + rect.width() + 24
+            startx -= (startx % 192)
+            endx = startx + rect.width() + 192
 
             starty = rect.y()
-            starty -= (starty % 24)
-            endy = starty + rect.height() + 24
+            starty -= (starty % 192)
+            endy = starty + rect.height() + 192
 
-            painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 1, Qt.PenStyle.DotLine))
+            painter.setPen(QtGui.QPen(GridColor, 2, Qt.PenStyle.DashLine))
 
             x = startx
             y1 = rect.top()
             y2 = rect.bottom()
             while x <= endx:
                 drawLine(QtCore.QLineF(x, starty, x, endy))
-                x += 24
+                x += 192
 
             y = starty
             x1 = rect.left()
             x2 = rect.right()
             while y <= endy:
                 drawLine(QtCore.QLineF(startx, y, endx, y))
-                y += 24
+                y += 192
+        elif self.grid == 2:
+            # jaja
+            L = 0.2
+            D = 0.1  # Change these values to change the checkerboard opacity
 
+            Light = QtGui.QColor(GridColor)
+            Dark = QtGui.QColor(GridColor)
+            Light.setAlpha(int(Light.alpha() * L))
+            Dark.setAlpha(int(Dark.alpha() * D))
 
-        if Zoom >= 2:
-            startx = rect.x()
-            startx -= (startx % 96)
-            endx = startx + rect.width() + 96
+            size = 24
 
-            starty = rect.y()
-            starty -= (starty % 96)
-            endy = starty + rect.height() + 96
+            board = QtGui.QPixmap(8 * size, 8 * size)
+            board.fill(QtGui.QColor(0, 0, 0, 0))
+            p = QtGui.QPainter(board)
+            p.setPen(QtCore.Qt.PenStyle.NoPen)
 
-            painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 1, Qt.PenStyle.DashLine))
+            p.setBrush(QtGui.QBrush(Light))
+            for x, y in ((0, size), (size, 0)):
+                p.drawRect(x + (4 * size), y, size, size)
+                p.drawRect(x + (4 * size), y + (2 * size), size, size)
+                p.drawRect(x + (6 * size), y, size, size)
+                p.drawRect(x + (6 * size), y + (2 * size), size, size)
 
-            x = startx
-            y1 = rect.top()
-            y2 = rect.bottom()
-            while x <= endx:
-                drawLine(QtCore.QLineF(x, starty, x, endy))
-                x += 96
+                p.drawRect(x, y + (4 * size), size, size)
+                p.drawRect(x, y + (6 * size), size, size)
+                p.drawRect(x + (2 * size), y + (4 * size), size, size)
+                p.drawRect(x + (2 * size), y + (6 * size), size, size)
 
-            y = starty
-            x1 = rect.left()
-            x2 = rect.right()
-            while y <= endy:
-                drawLine(QtCore.QLineF(startx, y, endx, y))
-                y += 96
+            p.setBrush(QtGui.QBrush(Dark))
+            for x, y in ((0, 0), (size, size)):
+                p.drawRect(x, y, size, size)
+                p.drawRect(x, y + (2 * size), size, size)
+                p.drawRect(x + (2 * size), y, size, size)
+                p.drawRect(x + (2 * size), y + (2 * size), size, size)
 
+                p.drawRect(x, y + (4 * size), size, size)
+                p.drawRect(x, y + (6 * size), size, size)
+                p.drawRect(x + (2 * size), y + (4 * size), size, size)
+                p.drawRect(x + (2 * size), y + (6 * size), size, size)
 
-        startx = rect.x()
-        startx -= (startx % 192)
-        endx = startx + rect.width() + 192
+                p.drawRect(x + (4 * size), y, size, size)
+                p.drawRect(x + (4 * size), y + (2 * size), size, size)
+                p.drawRect(x + (6 * size), y, size, size)
+                p.drawRect(x + (6 * size), y + (2 * size), size, size)
 
-        starty = rect.y()
-        starty -= (starty % 192)
-        endy = starty + rect.height() + 192
+                p.drawRect(x + (4 * size), y + (4 * size), size, size)
+                p.drawRect(x + (4 * size), y + (6 * size), size, size)
+                p.drawRect(x + (6 * size), y + (4 * size), size, size)
+                p.drawRect(x + (6 * size), y + (6 * size), size, size)
 
-        painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 2, Qt.PenStyle.DashLine))
+            del p
 
-        x = startx
-        y1 = rect.top()
-        y2 = rect.bottom()
-        while x <= endx:
-            drawLine(QtCore.QLineF(x, starty, x, endy))
-            x += 192
+            # Adjust the rectangle to align with the grid, so we don't have to
+            # paint pixmaps on non-integer coordinates
+            x, y, _, _ = rect.getRect()
+            mod = board.width()
+            rect.adjust(-(x % mod), -(y % mod), 0, 0)
 
-        y = starty
-        x1 = rect.left()
-        x2 = rect.right()
-        while y <= endy:
-            drawLine(QtCore.QLineF(startx, y, endx, y))
-            y += 192
+            painter.drawTiledPixmap(rect, board)
 
 
     def drawBackground(self, painter, rect):
+        #if 
         if KP.map.bgName == '/Maps/Water.brres':
             painter.fillRect(rect, QtGui.QColor(38, 96, 153))
         elif KP.map.bgName == '/Maps/Lava.brres':
@@ -383,7 +445,7 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
 
         self.setRenderHints(AntiAliasing)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
-        self.grid = False
+        self.grid = 0
 
         self.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignTop)
         self.setDragMode(QtWidgets.QGraphicsView.DragMode.RubberBandDrag)

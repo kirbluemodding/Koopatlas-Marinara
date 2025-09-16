@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QTreeWidgetItemIterator
 import os, copy
 import os.path
 import sys
+from settings import *
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -1205,7 +1206,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
         h = mb.addMenu('Help')
         self.ha = h.addAction('About',            self.aboutDialog)
         self.hb = h.addAction('Documentation',    self.goToHelp)
-        self.hc = h.addAction('Keyboard Shortcuts', self.keyboardShortcuts)
 
     def setupDocks(self):
         self.layerList = KPLayerList()
@@ -1286,6 +1286,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle('%s - Koopatlas Marinara Edition' % effectiveName)
 
+    # todo: fix whatever this hack was for
     def checkDirty(self):
         return False
 
@@ -1405,10 +1406,22 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.refreshMapState()
 
     def openRecent(self):
-        QtWidgets.QMessageBox.information(self, "Not Quite...", "This feature is planned for a later release. For now, enjoy opening files manually.")
+        
+        target = settings.config["File"]["LastMapOpen"]
+        if len(target) == 0:
+            return
+
+        import mapfile
+        with open(target, 'rb') as file:
+            obj = mapfile.load(file.read())
+        obj.filePath = target
+        KP.map = obj
+        KP.map.filePath = target
+        self.refreshMapState()
+        #QtWidgets.QMessageBox.information(self, "Not Quite...", "This feature is planned for a later release. For now, enjoy opening files manually.")
 
     def settingsMenu(self):
-        QtWidgets.QMessageBox.information(self, "Not Quite...", "Settings are planned for a later release. For now, enjoy a lack of personalization...")
+        QtWidgets.QMessageBox.information(self, "Not Quite...", "A full settings menu is planned for a later release. For now, enjoy the program only remembering select things on the tool-bar...")
     
     def closeWarning(self):
         reply = QtWidgets.QMessageBox.warning(self, "Warning", "Are you sure you want to quit? Any unsaved data will be lost.",
@@ -1692,9 +1705,11 @@ class KPMainWindow(QtWidgets.QMainWindow):
 ########################
     def setMapBackground(self):
         from dialogs import getTextDialog
-        newBG = getTextDialog('Map Background', 'Enter a path (ex. /Maps/Water.brres):', KP.map.bgName)
+        newBG = getTextDialog('Map Background', 'Enter a path (ex. /Maps/Water.brres or /Maps/Lava.brres):', KP.map.bgName)
         if newBG is not None:
             KP.map.bgName = newBG
+        # whenever you change it to lava and it does that. So you have to update you're canvases.
+        self.scene.update()
 
     def showWorldEditor(self):
         from worldeditor import KPWorldEditor
@@ -1730,23 +1745,26 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
         self.editor.setTransform(tr)
 
-        self.wb.setEnabled(self.ZoomLevel != 8)
-        self.wc.setEnabled(self.ZoomLevel != 0)
-        self.wd.setEnabled(self.ZoomLevel != 5)
-
+        self.vb.setEnabled(self.ZoomLevel != 8)
+        self.vc.setEnabled(self.ZoomLevel != 0)
+        self.vd.setEnabled(self.ZoomLevel != 5)
+        print(self.ZoomLevel)
         self.scene.update()
 
     def showGrid(self):
         """Handle toggling of the grid being showed"""
         # settings.setValue('GridEnabled', checked)
-
-        if self.scene.grid == True:
-            self.scene.grid = False
-            self.wa.setChecked(False)
+        if self.scene.grid == 2: # make 2 soon. 2 grids
+            self.scene.grid = 0
         else:
-            self.scene.grid = True
-            self.wa.setChecked(True)
-
+            self.scene.grid += 1 # why can't i just use the ++ prefix like normal
+        settings.config["Window"]["grid_type"] = str(self.scene.grid)
+        # i'm pretty sure this just doesn't work at all =)
+        if self.scene.grid == 1 or self.scene.grid == 2:
+            self.va.setChecked(True)
+        else:
+            self.va.setChecked(False)
+        #print(self.scene.grid)
         self.scene.update()
 
     def showWiiZoom(self):
@@ -1757,6 +1775,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
             self.editor.grid = True
 
         self.editor.update()
+        self.scene.update()
 
 
 # Help
@@ -1764,15 +1783,12 @@ class KPMainWindow(QtWidgets.QMainWindow):
     def aboutDialog(self):
         caption = "About Koopatlas Marinara"
 
-        text = "<big><b>Koopatlas</b></big><br><br>    The Koopatlas Editor is an editor for custom two dimensional world maps, for use with the Newer SMBWii world map engine. It should be included with its companion program, Koopuzzle, which will create tilesets compatible with Koopatlas.<br><br>    Koopatlas was programmed by Treeki and Tempus of the Newer Team.<br><br>    Find the website at html://www.newerteam.com for more information."
-
-
-        msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)
-
-    def keyboardShortcuts(self):
-        caption = "Keyboard Shortcuts"
-
-        text = ""
+        text = "<big><b>Koopatlas</b></big><br><br>" \
+        "<p>The Koopatlas Editor is an editor for custom two dimensional world maps, for use with the Newer SMBWii world map engine. It should be included with its companion program, Koopuzzle, which will create tilesets compatible with Koopatlas.<br><br>" \
+        "Koopatlas was programmed by Treeki and Tempus of the Newer Team.<br><br>" \
+        "Find the website at <a href=\"www.newerteam.com\">www.newerteam.com</a> for more information.<br><br>" \
+        "Koopatlas <span style=\"color:red;\">𝓜𝓪𝓻𝓲𝓷𝓪𝓻𝓪</span> is an unofficial mod created by Kirblue containing new enhancements, namely bug fixes, and a reminder to save your work."
+        
 
 
         msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)

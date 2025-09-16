@@ -1,10 +1,19 @@
 from common import *
+from settings import *
+import time
 
 class KP:
     @staticmethod
     def run():
+
+        # a lot of the below require the settings
+        # this entire block has to be here or Python fucking dies.
+        settings._insure()
+        
+        #time.sleep(1)
         KP.app = QtWidgets.QApplication(sys.argv)
 
+        # this is like completely Jaja and not the real settings
         if os.path.isfile('portable.txt'):
             KP.app.settings = QtCore.QSettings('settings_Koopatlas.ini', QtCore.QSettings.IniFormat)
         else:
@@ -21,8 +30,11 @@ class KP:
         KP.mainWindow.show()
 
         KP.enumerateTilesets()
-
+        
         app_exec(KP.app)
+        # we can assume this is on program end or alt f4
+        # saves configs
+        settings._onexit()
 
 
     @classmethod
@@ -64,7 +76,7 @@ class KP:
                 registry[name] = {'path': filepath}
 
         if not foundAnyTilesets:
-            QtWidgets.QMessageBox.warning(None, 'Warning', "Your Tilesets folder seems to be empty. You won't be able to load any world maps without them! You can get Newer Wii's world map and tileset files at <a href=\"https://github.com/Newer-Team/NewerSMBW/tree/no-translations/NewerResources\">https://github.com/Newer-Team/NewerSMBW/tree/no-translations/NewerResources</a>.")
+            QtWidgets.QMessageBox.warning(None, 'Warning', "Your Tilesets folder seems to be empty. You won't be able to load any world maps without them! You can get Newer Wii's world map and tileset files at <a href=\"https://github.com/Newer-Team/NewerSMBW/tree/clang-no-translations/NewerResources\">the NewerSMBW GitHub</a>.")
 
 
     @classmethod
