@@ -1607,11 +1607,11 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
     def playButtonChanged(self):
         if self.scene.playing:
-            self.aa.setText('Stop Animations')
+            self.ma.setText('Stop Animations')
             self.layerList.actPlayPause.setIcon(KP.icon('AStop'))
             self.layerList.actPlayPause.setText('Stop')
         else:
-            self.aa.setText('Play Animations')
+            self.ma.setText('Play Animations')
             self.layerList.actPlayPause.setIcon(KP.icon('APlay'))
             self.layerList.actPlayPause.setText('Play')
 
