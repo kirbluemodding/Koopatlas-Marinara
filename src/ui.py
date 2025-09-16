@@ -1135,10 +1135,10 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.ff = add_action_compat(f,'Export Map...',              self.exportMap, QKeySequence("Ctrl+E"))
         self.fj = add_action_compat(f,'Batch Save...',              self.batchSave, QKeySequence("Ctrl+Shift+E"))
         f.addSeparator()
-        self.fg = add_action_compat(f,'Take Screenshot...',         self.screenshot, QKeySequence("Ctrl+Alt+S"))
+        self.fg = add_action_compat(f,'Take Screenshot...',         self.screenshot, QKeySequence("Ctrl+Alt+Shift+S"))
         self.fh = add_action_compat(f,'Export Doodads...',          self.exportDoodads, QKeySequence("Ctrl+Alt+Shift+D"))
         f.addSeparator()
-        self.fi = add_action_compat(f,'Settings',                self.settingsMenu, QKeySequence("Ctrl+Alt+P"))
+        self.fi = add_action_compat(f,'Settings',                self.settingsMenu, QKeySequence("Ctrl+Alt+S"))
         f.addSeparator()
         self.fj = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
 
@@ -1168,9 +1168,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.ma = add_action_compat(m,'Play Animations',            self.playAnim, QKeySequence("Ctrl+P"))
         self.mc = add_action_compat(m,'Reset Animations',           self.resetAnim, QKeySequence("Ctrl+Shift+P"))
         m.addSeparator()
-        self.md = add_action_compat(m,'Load Animation Presets...',  self.loadAnimPresets)
-        self.me = add_action_compat(m,'Save Animation Presets...',  self.saveAnimPresets)
-        self.mf = add_action_compat(m,'Clear Animation Presets',    self.clearAnimPresets)
+        self.md = add_action_compat(m,'Import Animation Presets...',  self.loadAnimPresets, QKeySequence("Ctrl+Alt+Shift+I"))
+        self.me = add_action_compat(m,'Export Animation Presets...',  self.saveAnimPresets, QKeySequence("Ctrl+Alt+Shift+E"))
+        self.mf = add_action_compat(m,'Clear Animation Presets',    self.clearAnimPresets, QKeySequence("Ctrl+Alt+Shift+C"))
         m.addSeparator()
         self.mg = add_action_compat(m,'Set Background...',          self.setMapBackground, QKeySequence("Ctrl+Shift+B"))
         m.addSeparator()
@@ -1203,9 +1203,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
         v.addAction(pathAction)
 
         h = mb.addMenu('Help')
-        self.ha = h.addAction('About',            self.aboutDialog)
-        self.hb = h.addAction('Documentation',    self.goToHelp)
-        self.hc = h.addAction('Keyboard Shortcuts', self.keyboardShortcuts)
+        self.ha = add_action_compat(h,'About',            self.aboutDialog, QKeySequence("Ctrl+Alt+A"))
+        self.hb = add_action_compat(h,'Documentation',    self.goToHelp, QKeySequence("Ctrl+Alt+D"))
+        self.hc = add_action_compat(h,'Keyboard Shortcuts', self.keyboardShortcuts, QKeySequence("Ctrl+Alt+K"))
 
     def setupDocks(self):
         self.layerList = KPLayerList()
