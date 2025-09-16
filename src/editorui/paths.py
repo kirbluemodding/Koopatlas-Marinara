@@ -381,21 +381,30 @@ class KPEditorNode(KPEditorItem):
             painter.setPen(QtGui.QColor(0, 0, 0, 0))
             pix = QtGui.QPixmap("Resources/BlackLevel.png")
             painter.drawPixmap(-pix.width()//2, -pix.height()//2, pix)
+            palette = QtWidgets.QApplication.palette()
+            window_color = palette.color(QtGui.QPalette.ColorRole.Window)
+            highlight_color = palette.color(QtGui.QPalette.ColorRole.Highlight)
+
             selectionRect = self._boundingRect.adjusted(1,5,-1,-5)
 
         elif node.mapChange is not None:
-            painter.setBrush(QtGui.QColor(0, 0, 0, 0))
-            painter.setPen(QtGui.QColor(0, 0, 0, 0))
+            palette = QtWidgets.QApplication.palette()
+            window_color = palette.color(QtGui.QPalette.ColorRole.Window)
+            highlight_color = palette.color(QtGui.QPalette.ColorRole.Highlight)
+            text_color = palette.color(QtGui.QPalette.ColorRole.Text)
+
+            painter.setBrush(window_color)
+            painter.setPen(window_color)
             pix = QtGui.QPixmap("Resources/ExitWorld.png")
             painter.drawPixmap(-pix.width()//2, -pix.height()//2, pix)
 
             textPath = QtGui.QPainterPath()
             font = QtGui.QFont("Times", 22)
-            # font.setStyleStrategy(QtGui.QFont.ForceOutline)
+            font.setStyleStrategy(QtGui.QFont.StyleStrategy.ForceOutline)
             textPath.addText(-6, 3, font, str(node.mapID))
 
-            painter.setBrush(QtGui.QColor(140, 140, 255))
-            pen = QtGui.QPen(QtGui.QColor(80, 80, 255))
+            painter.setBrush(highlight_color)
+            pen = QtGui.QPen(text_color)
             pen.setWidth(1)
             pen.setStyle(Qt.PenStyle.SolidLine)
             painter.setPen(pen)

@@ -263,7 +263,7 @@ class KPPathNodeList(QtWidgets.QWidget):
 
     def findFolder(self, matchString):
 
-        itemList = QtWidgets.QTreeWidgetItemIterator(self.tree, QtWidgets.QTreeWidgetItemIterator.IterateFlags.Editable)
+        itemList = QtWidgets.QTreeWidgetItemIterator(self.tree, QtWidgets.QTreeWidgetItemIterator.IteratorFlag.Editable)
 
         while itemList.value():
             item = itemList.value()
@@ -276,7 +276,7 @@ class KPPathNodeList(QtWidgets.QWidget):
         return None
 
     def findItemFor(self, associate):
-        itemList = QtWidgets.QTreeWidgetItemIterator(self.tree, QtWidgets.QTreeWidgetItemIterator.IterateFlags.NotEditable)
+        itemList = QtWidgets.QTreeWidgetItemIterator(self.tree, QtWidgets.QTreeWidgetItemIterator.IteratorFlag.NotEditable)
 
         while itemList.value():
             item = itemList.value()
@@ -1138,7 +1138,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.fg = add_action_compat(f,'Take Screenshot...',         self.screenshot, QKeySequence("Ctrl+Alt+S"))
         self.fh = add_action_compat(f,'Export Doodads...',          self.exportDoodads, QKeySequence("Ctrl+Alt+Shift+D"))
         f.addSeparator()
-        self.fi = add_action_compat(f,'Preferences',                self.preferences, QKeySequence("Ctrl+Alt+P"))
+        self.fi = add_action_compat(f,'Settings',                self.settingsMenu, QKeySequence("Ctrl+Alt+P"))
         f.addSeparator()
         self.fj = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
 
@@ -1407,8 +1407,8 @@ class KPMainWindow(QtWidgets.QMainWindow):
     def openRecent(self):
         QtWidgets.QMessageBox.information(self, "Not Quite...", "This feature is planned for a later release. For now, enjoy opening files manually.")
 
-    def preferences(self):
-        QtWidgets.QMessageBox.information(self, "Not Quite...", "Preferences are planned for a later release. For now, enjoy a lack of personalization...")
+    def settingsMenu(self):
+        QtWidgets.QMessageBox.information(self, "Not Quite...", "Settings are planned for a later release. For now, enjoy a lack of personalization...")
     
     def closeWarning(self):
         reply = QtWidgets.QMessageBox.warning(self, "Warning", "Are you sure you want to quit? Any unsaved data will be lost.",

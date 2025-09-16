@@ -615,7 +615,7 @@ class KPMap(object):
     def save(self):
         path = self.filePath
         if path is None:
-            raise "no path specified for this map"
+            raise "No path was specified for this map"
 
         KP.mainWindow.pathNodeList.setLayerFolders()
         self.associateLayers = KP.mainWindow.pathNodeList.getLayers()
