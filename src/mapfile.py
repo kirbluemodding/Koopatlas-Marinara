@@ -104,7 +104,7 @@ def load(string):
 @dumpClassAs(QtGui.QPixmap, 'pixmap')
 def dumpPixmap(pm):
     buf = QtCore.QBuffer()
-    buf.open(buf.WriteOnly)
+    buf.open(buf.OpenModeFlag.WriteOnly)
     pm.save(buf, 'PNG')
     data = bytes(buf.data())
     buf.close()

@@ -18,7 +18,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
         self.timeLines = []
         self.ticker = QtCore.QTimeLine(100000)
         self.ticker.setLoopCount(0)
-        self.ticker.setCurveShape(4)
+        set_curve_shape_compat(self.ticker, 4)
         self.ticker.setFrameRange(0,100000)
         self.ticker.valueChanged.connect(self.viewportUpdateProxy)
         self.ticker.setUpdateInterval(round(1000/60.0))
@@ -52,7 +52,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
     def playPause(self):
         if self.playing == False:
             self.playing = True
-            self.views()[0].setViewportUpdateMode(0)
+            self.views()[0].setViewportUpdateMode(QtWidgets.QGraphicsView.ViewportUpdateMode.NoViewportUpdate)
             self.ticker.start()
 
             for timeline in self.timeLines:
@@ -61,7 +61,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
 
         else:
             self.playing = False
-            self.views()[0].setViewportUpdateMode(1)
+            self.views()[0].setViewportUpdateMode(QtWidgets.QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
             self.ticker.stop()
 
             for timeline in self.timeLines:
@@ -88,7 +88,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
             starty -= (starty % 24)
             endy = starty + rect.height() + 24
 
-            painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 1, QtCore.Qt.DotLine))
+            painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 1, Qt.PenStyle.DotLine))
 
             x = startx
             y1 = rect.top()
@@ -114,7 +114,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
             starty -= (starty % 96)
             endy = starty + rect.height() + 96
 
-            painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 1, QtCore.Qt.DashLine))
+            painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 1, Qt.PenStyle.DashLine))
 
             x = startx
             y1 = rect.top()
@@ -139,7 +139,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
         starty -= (starty % 192)
         endy = starty + rect.height() + 192
 
-        painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 2, QtCore.Qt.DashLine))
+        painter.setPen(QtGui.QPen(QtGui.QColor.fromRgb(255,255,255,100), 2, Qt.PenStyle.DashLine))
 
         x = startx
         y1 = rect.top()
@@ -157,7 +157,13 @@ class KPMapScene(QtWidgets.QGraphicsScene):
 
 
     def drawBackground(self, painter, rect):
-        painter.fillRect(rect, QtGui.QColor(209, 218, 236))
+        if KP.map.bgName == '/Maps/Water.brres':
+            painter.fillRect(rect, QtGui.QColor(38, 96, 153))
+        elif KP.map.bgName == '/Maps/Lava.brres':
+            painter.fillRect(rect, QtGui.QColor(153, 38, 38))
+        else:
+            painter.fillRect(rect, QtGui.QColor(119, 136, 153))
+
 
         areaLeft, areaTop = rect.x(), rect.y()
         areaWidth, areaHeight = rect.width(), rect.height()
@@ -375,17 +381,17 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
     def __init__(self, scene, parent=None):
         QtWidgets.QGraphicsView.__init__(self, scene, parent)
 
-        self.setRenderHints(QtGui.QPainter.Antialiasing)
-        self.setViewportUpdateMode(self.FullViewportUpdate)
+        self.setRenderHints(AntiAliasing)
+        self.setViewportUpdateMode(QtWidgets.QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
         self.grid = False
 
-        self.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-        self.setDragMode(self.RubberBandDrag)
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignTop)
+        self.setDragMode(QtWidgets.QGraphicsView.DragMode.RubberBandDrag)
 
-        self.xScrollBar = QtWidgets.QScrollBar(Qt.Horizontal, parent)
+        self.xScrollBar = QtWidgets.QScrollBar(QtCore.Qt.Orientation.Horizontal, parent)
         self.setHorizontalScrollBar(self.xScrollBar)
 
-        self.yScrollBar = QtWidgets.QScrollBar(Qt.Vertical, parent)
+        self.yScrollBar = QtWidgets.QScrollBar(QtCore.Qt.Orientation.Vertical, parent)
         self.setVerticalScrollBar(self.yScrollBar)
 
         self.assignNewScene(scene)
@@ -395,8 +401,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
         QtWidgets.QGraphicsView.drawForeground(self, painter, rect)
 
         if self.grid:
-            painter.setPen(Qt.red)
-            painter.setBrush(Qt.transparent)
+            painter.setPen(Qt.GlobalColor.red)
+            painter.setBrush(Qt.GlobalColor.transparent)
 
             c = rect.center()
             x = c.x()
@@ -450,7 +456,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
             paint = self.objectToPaint
             if paint is None: return
 
-            clicked = self.mapToScene(event.x(), event.y())
+            pos = event.position()
+            clicked = self.mapToScene(int(pos.x()), int(pos.y()))
             x, y = clicked.x(), clicked.y()
             if x < 0: x = 0
             if y < 0: y = 0
@@ -480,7 +487,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
             paint = self.doodadToPaint
             if paint is None: return
 
-            clicked = self.mapToScene(event.x(), event.y())
+            pos = event.position()
+            clicked = self.mapToScene(int(pos.x()), int(pos.y()))
             x, y = clicked.x(), clicked.y()
             if x < 0: x = 0
             if y < 0: y = 0
@@ -501,11 +509,12 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
 
         elif isinstance(layer, KPPathLayer):
             # decide what's under the mouse
-            clicked = self.mapToScene(event.x(), event.y())
+            pos = event.position()
+            clicked = self.mapToScene(int(pos.x()), int(pos.y()))
             x, y = clicked.x(), clicked.y()
             itemsUnder = self.scene().items(clicked)
 
-            if event.modifiers() & Qt.AltModifier:
+            if event.modifiers() & Qt.KeyboardModifier.AltModifier:
                 dialog = True
             else:
                 dialog = False
@@ -645,7 +654,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
                 paint = self.objectToPaint
                 if paint is None: return
 
-                clicked = self.mapToScene(event.x(), event.y())
+                pos = event.position()
+                clicked = self.mapToScene(int(pos.x()), int(pos.y()))
                 x, y = clicked.x(), clicked.y()
                 if x < 0: x = 0
                 if y < 0: y = 0
@@ -675,7 +685,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
                 paint = self.doodadToPaint
                 if paint is None: return
 
-                clicked = self.mapToScene(event.x(), event.y())
+                pos = event.position()
+                clicked = self.mapToScene(int(pos.x()), int(pos.y()))
                 x, y = clicked.x(), clicked.y()
                 if x < 0: x = 0
                 if y < 0: y = 0
@@ -701,7 +712,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
         item = self.paintingItem
 
         if isinstance(obj, KPObject):
-            clicked = self.mapToScene(event.x(), event.y())
+            pos = event.position()
+            clicked = self.mapToScene(int(pos.x()), int(pos.y()))
             x, y = clicked.x(), clicked.y()
             if x < 0: x = 0
             if y < 0: y = 0
@@ -749,11 +761,11 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
 
     def mousePressEvent(self, event):
 
-        if event.button() == Qt.RightButton:
+        if event.button() == QtCore.Qt.MouseButton.RightButton:
             self._tryToPaint(event)
             event.accept()
 
-        elif event.modifiers() & Qt.ControlModifier:
+        elif event.modifiers() & Qt.KeyboardModifier.ControlModifier:
             if isinstance(self.scene().currentLayer, KPPathLayer):
                 QtWidgets.QGraphicsView.mousePressEvent(self, event)
                 return
@@ -780,7 +792,7 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
 
 
     def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.RightButton and self.painting:
+        if event.buttons() == QtCore.Qt.MouseButton.RightButton and self.painting:
             self._movedWhilePainting(event)
             event.accept()
 
@@ -798,7 +810,7 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
 
 
     def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Delete or event.key() == QtCore.Qt.Key_Backspace:
+        if event.key() == Key.Key_Delete or event.key() == Key.Key_Backspace:
             scene = self.scene()
 
             selection = scene.selectedItems()

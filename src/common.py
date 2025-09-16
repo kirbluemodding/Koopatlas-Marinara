@@ -2,11 +2,9 @@ import sys
 import os
 import os.path
 
-# compatibility slop for PyQt6/PyQt5
-# PyQt4 support has been removed due to how outdated it is, and the fact that i don't know of any other tools for NSMBW that use it (basically there's no reason to use it or have it installed without PyQt5 or PyQt6)
-# is there probably a better way to set this up and probably keep PyQt4 compatibility? probably, but do i care? no
-
-PYQT6 = False
+# this version of koopatlas uses PyQt6, and any other versions are currently unsupported.
+# since i do plan on adding PyQt5 support again (and support for PyQt7+ in the future), i've left some random compat stuff here.
+# HOWEVER, PyQt4 and below will not be supported due to their extreme age and the fact that they are no longer commonly used.
 
 try:
     # try PyQt6 first
@@ -67,61 +65,9 @@ try:
     def make_qkeyseq(standard):
         return QtGui.QKeySequence(standard)
 
-except ImportError:
-    # fallback to the lame and inferior PyQt5
-    from PyQt5 import QtCore, QtGui, QtWidgets
-    QtCore.QString = str
-
-    # some MORE enum families, even though PyQt5 has them flat let's just do this for consistency's sake
-    ItemDataRole   = QtCore.Qt
-    Alignment      = QtCore.Qt
-    Orientation    = QtCore.Qt
-    ItemFlag       = QtCore.Qt
-    DockWidgetArea = QtCore.Qt
-    DockFeatures   = QtCore.Qt
-    ToolButtonStyle= QtCore.Qt
-    ToolButtonMode = QtWidgets.QToolButton
-    SizePolicy     = QtWidgets.QSizePolicy
-    ViewportUpdate = QtWidgets.QGraphicsView
-    DragMode       = QtWidgets.QGraphicsView
-    DragDropMode   = QtWidgets.QAbstractItemView
-    SelectionMode  = QtWidgets.QAbstractItemView
-    Movement       = QtWidgets.QListView
-    LayoutMode     = QtWidgets.QListView
-    ViewMode       = QtWidgets.QListView
-    Key            = QtCore.Qt
-    MouseButton    = QtCore.Qt
-    KeyboardMod    = QtCore.Qt
-    CheckState     = QtCore.Qt
-    GlobalColor    = QtCore.Qt
-    IteratorFlag   = QtWidgets.QTreeWidgetItemIterator
-    GraphicsItemFlag = QtWidgets.QGraphicsItem
-
-    EasingType = QtCore.QEasingCurve
-
-    # the doubletons
-    AntiAliasing = QtGui.QPainter.Antialiasing
-    Format_ARGB32 = QtGui.QImage.Format_ARGB32
-
-    # keyboard shortcuts
-    Copy      = QtGui.QKeySequence.Copy
-    Paste     = QtGui.QKeySequence.Paste
-    SelectAll = QtGui.QKeySequence.SelectAll
-    ZoomIn    = QtGui.QKeySequence.ZoomIn
-    ZoomOut   = QtGui.QKeySequence.ZoomOut
-
-    def add_action_compat(menu_or_toolbar, text, slot=None, shortcut=None, parent=None):
-        if slot is not None and shortcut is not None:
-            return menu_or_toolbar.addAction(text, slot, shortcut)
-        elif slot is not None:
-            return menu_or_toolbar.addAction(text, slot)
-        elif shortcut is not None:
-            return menu_or_toolbar.addAction(text, shortcut)
-        else:
-            return menu_or_toolbar.addAction(text)
-
-    def app_exec(app):
-        return app.exec_()
+except (ImportError, NameError):
+    errormsg = 'PyQt6 is not currently installed. Either wait a thousand years for PyQt5 support, or spend 3 seconds installing PyQt6.'
+    raise Exception(errormsg)
 
 Qt = QtCore.Qt
 QtCompatVersion = QtCore.QT_VERSION

@@ -15,6 +15,51 @@ def colourFromNiceStr(thing):
         pass
     return None
 
+class ColorDelegate(QtWidgets.QItemDelegate):
+    '''new color picker, replaces typing in a hex code manually'''
+    '''strangely also the only piece of code that uses super'''
+    def __init__(self, parent=None):
+        super(ColorDelegate, self).__init__(parent)
+
+    def paint(self, painter, option, index):
+        color = index.data(QtCore.Qt.ItemDataRole.DecorationRole)
+        
+        if color:
+            rect = option.rect.adjusted(2, 2, -2, -2)
+            painter.setBrush(QtGui.QBrush(color))
+            painter.setPen(QtCore.Qt.PenStyle.NoPen)
+            painter.drawRect(rect)
+        text = index.data(QtCore.Qt.ItemDataRole.DisplayRole)
+        if text:
+            option.rect.adjust(rect.width() + 4, 0, 0, 0)
+            super(ColorDelegate, self).paint(painter, option, index)
+
+    def createEditor(self, parent, _option, index):
+        color = index.data(QtCore.Qt.ItemDataRole.DecorationRole)
+        dialog = QtWidgets.QColorDialog(parent)
+        dialog.setCurrentColor(color)
+        dialog.setOption(QtWidgets.QColorDialog.ColorDialogOption.DontUseNativeDialog, True)
+        dialog.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
+        if dialog.exec() == QtWidgets.QDialog.DialogCode.Accepted:
+            selected_color = dialog.currentColor()
+            if selected_color.isValid():
+                r, g, b, a = selected_color.getRgb()
+                model = index.model()
+                model.setData(index, '#%02X%02X%02X (%d)' % (r, g, b, a), QtCore.Qt.ItemDataRole.EditRole)
+            return None
+        return None
+
+    def setEditorData(self, editor, index):
+        color = index.data(QtCore.Qt.ItemDataRole.DecorationRole)
+        if color:
+            editor.setCurrentColor(color)
+
+    def setModelData(self, editor, model, index):
+        color = editor.currentColor()
+        if color.isValid():
+            r, g, b, a = color.getRgb()
+            model.setData(index, '#%02X%02X%02X (%d)' % (r, g, b, a), QtCore.Qt.ItemDataRole.EditRole)
+
 class KPWorldTableModel(QtCore.QAbstractTableModel):
     FIELDS = ('Name', 'World ID', 'Track ID',
             'FS Text 1', 'FS Text 2',
@@ -32,11 +77,11 @@ class KPWorldTableModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent):
         return len(self.FIELDS)
     def headerData(self, section, orientation, role):
-        if orientation == Qt.Horizontal:
-            if role == Qt.DisplayRole:
+        if orientation == QtCore.Qt.Orientation.Horizontal:
+            if role == QtCore.Qt.ItemDataRole.DisplayRole:
                 return self.FIELDS[section]
         else:
-            if role == Qt.DisplayRole:
+            if role == QtCore.Qt.ItemDataRole.DisplayRole:
                 return str(self.worlds[section].uniqueKey)
 
         return None
@@ -52,7 +97,7 @@ class KPWorldTableModel(QtCore.QAbstractTableModel):
             entry = self.worlds[index.row()]
             col = index.column()
 
-            if role == Qt.DisplayRole or role == Qt.EditRole:
+            if role == QtCore.Qt.ItemDataRole.DisplayRole or role == QtCore.Qt.ItemDataRole.EditRole:
                 if col == 0:
                     return entry.name
                 elif col == 1:
@@ -70,7 +115,7 @@ class KPWorldTableModel(QtCore.QAbstractTableModel):
                 elif col == 12:
                     return entry.titleScreenID
 
-            if role == Qt.DecorationRole:
+            if role == QtCore.Qt.ItemDataRole.DecorationRole:
                 if col == 3 or col == 4:
                     return QtGui.QColor(*entry.fsTextColours[col - 3])
                 elif col == 5 or col == 6:
@@ -81,11 +126,11 @@ class KPWorldTableModel(QtCore.QAbstractTableModel):
         return None
 
     def flags(self, index):
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
+        return QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
 
     def setData(self, index, value, role):
         if index.isValid():
-            if role == Qt.EditRole:
+            if role == QtCore.Qt.ItemDataRole.EditRole:
                 success = False
 
                 entry = self.worlds[index.row()]
@@ -163,8 +208,9 @@ class KPWorldTableModel(QtCore.QAbstractTableModel):
 
 class KPWorldEditor(QtWidgets.QWidget):
     def __init__(self, kpmap, parent=None):
-        QtWidgets.QWidget.__init__(self, parent, Qt.Window)
+        QtWidgets.QWidget.__init__(self, parent, QtCore.Qt.WindowType.Window)
         self.setWindowTitle('World Editor')
+        self.resize(750, 350)
 
         self.dataView = QtWidgets.QTableView(self)
 
@@ -178,6 +224,11 @@ class KPWorldEditor(QtWidgets.QWidget):
 
         self.model = KPWorldTableModel(kpmap, self)
         self.dataView.setModel(self.model)
+        
+        # Create an instance of the color delegate and set it for the color columns
+        color_delegate = ColorDelegate(self.dataView)
+        for col in range(3, 9):
+            self.dataView.setItemDelegateForColumn(col, color_delegate)
 
         self.addButton.clicked.connect(self.model.addEntryToEnd)
         self.removeButton.clicked.connect(self.removeCurrentEntry)

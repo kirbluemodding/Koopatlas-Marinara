@@ -48,7 +48,7 @@ class KPEditorNode(KPEditorItem):
             self.state = initialState
 
             if not hasattr(KPEditorNode.ToggleButton, 'PALETTE'):
-                KPEditorNode.ToggleButton.PALETTE = QtGui.QPalette(Qt.transparent)
+                KPEditorNode.ToggleButton.PALETTE = QtGui.QPalette(Qt.GlobalColor.transparent)
 
             self.setPalette(self.PALETTE)
 
@@ -67,7 +67,7 @@ class KPEditorNode(KPEditorItem):
             painter = QtGui.QPainter(self)
 
             if self.isDown():
-                self.iconList[self.state].paint(painter, self.contentsRect(), Qt.AlignCenter, QtGui.QIcon.Disabled)
+                self.iconList[self.state].paint(painter, self.contentsRect(), Qt.AlignmentFlag.AlignCenter, QtGui.QIcon.Mode.Disabled)
             else:
                 self.iconList[self.state].paint(painter, self.contentsRect())
 
@@ -89,8 +89,8 @@ class KPEditorNode(KPEditorItem):
             self.setRange(1, 99)
 
             palette = self.palette()
-            palette.setColor(QtGui.QPalette.ButtonText, Qt.black)
-            palette.setColor(QtGui.QPalette.Window, Qt.transparent)
+            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
 
@@ -103,8 +103,8 @@ class KPEditorNode(KPEditorItem):
                            'Mario Wipe', 'Circle Wipe Slow', 'Glitchgasm'])
 
             palette = self.palette()
-            palette.setColor(QtGui.QPalette.ButtonText, Qt.black)
-            palette.setColor(QtGui.QPalette.Window, Qt.transparent)
+            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
 
@@ -114,8 +114,8 @@ class KPEditorNode(KPEditorItem):
             QtWidgets.QCheckBox.__init__(self)
 
             palette = self.palette()
-            palette.setColor(QtGui.QPalette.ButtonText, Qt.black)
-            palette.setColor(QtGui.QPalette.Window, Qt.transparent)
+            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
 
@@ -127,8 +127,8 @@ class KPEditorNode(KPEditorItem):
             self.setText('/Maps/*.kpbin')
 
             palette = self.palette()
-            palette.setColor(QtGui.QPalette.ButtonText, Qt.black)
-            palette.setColor(QtGui.QPalette.Window, Qt.transparent)
+            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
 
@@ -149,7 +149,7 @@ class KPEditorNode(KPEditorItem):
         self.isLayerSelected = False
 
         if not hasattr(KPEditorNode, 'SELECTION_PEN'):
-            KPEditorNode.SELECTION_PEN = QtGui.QPen(Qt.blue, 1, Qt.DotLine)
+            KPEditorNode.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.blue, 1, Qt.PenStyle.DotLine)
 
         if node.level:
             initialState = PATH_NODE_STATE_LEVEL
@@ -220,7 +220,7 @@ class KPEditorNode(KPEditorItem):
 
 
     def itemChange(self, change, value):
-        if change == QtWidgets.QGraphicsItem.ItemSceneHasChanged and self.scene() is not None:
+        if change == QtWidgets.QGraphicsItem.GraphicsItemChange.ItemSceneHasChanged and self.scene() is not None:
             self.scene().addItem(self.buttonProxy)
             self.scene().addItem(self.worldProxy)
             self.scene().addItem(self.stageProxy)
@@ -371,7 +371,7 @@ class KPEditorNode(KPEditorItem):
 
     def paint(self, painter, option, widget):
 
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(AntiAliasing)
         node = self._nodeRef()
 
         selectionRect = None
@@ -391,13 +391,13 @@ class KPEditorNode(KPEditorItem):
 
             textPath = QtGui.QPainterPath()
             font = QtGui.QFont("Times", 22)
-            font.setStyleStrategy(QtGui.QFont.ForceOutline)
+            # font.setStyleStrategy(QtGui.QFont.ForceOutline)
             textPath.addText(-6, 3, font, str(node.mapID))
 
             painter.setBrush(QtGui.QColor(140, 140, 255))
             pen = QtGui.QPen(QtGui.QColor(80, 80, 255))
             pen.setWidth(1)
-            pen.setStyle(Qt.SolidLine)
+            pen.setStyle(Qt.PenStyle.SolidLine)
             painter.setPen(pen)
             painter.drawPath(textPath)
 
@@ -659,7 +659,7 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
     def __init__(self, path):
         QtWidgets.QGraphicsLineItem.__init__(self)
 
-        self.setFlag(self.ItemIsSelectable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
 
         self.setZValue(100)
 
@@ -678,11 +678,11 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
 
         if not hasattr(KPEditorPath, 'PEN'):
             KPEditorPath.BRUSH = QtGui.QBrush(QtGui.QColor(255, 255, 255, 140))
-            KPEditorPath.PEN = QtGui.QPen(KPEditorPath.BRUSH, 8, Qt.SolidLine, Qt.RoundCap)
+            KPEditorPath.PEN = QtGui.QPen(KPEditorPath.BRUSH, 8, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap)
         self.setPen(KPEditorPath.PEN)
 
         if not hasattr(KPEditorPath, 'SELECTION_PEN'):
-            KPEditorPath.SELECTION_PEN = QtGui.QPen(Qt.blue, 1, Qt.DotLine)
+            KPEditorPath.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.blue, 1, Qt.PenStyle.DotLine)
 
         self.options = self.PathOptionsMenuButton(self._pathRef)
         self.optionsProxy = self.HiddenProxy(self.options)
@@ -693,9 +693,9 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
         self.updatePosition()
 
     def mousePressEvent(self, event):
-        if event.button() != Qt.LeftButton:
+        if event.button() != Qt.MouseButton.LeftButton:
             return
-        if QtWidgets.QApplication.keyboardModifiers() != QtCore.Qt.ControlModifier:
+        if QtWidgets.QApplication.keyboardModifiers() != Qt.KeyboardModifier.ControlModifier:
             return
 
         # modify the unlock settings
@@ -706,8 +706,8 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
         if hasattr(self._pathRef(), 'unlockSpec'):
             dlg.setSpec(self._pathRef().unlockSpec)
 
-        result = dlg.exec_()
-        if result == QtWidgets.QDialog.Accepted:
+        result = dlg.exec()
+        if result == QtWidgets.QDialog.DialogCode.Accepted:
             print("New spec:", dlg.spec)
             self._pathRef().unlockSpec = dlg.spec
 
@@ -737,7 +737,7 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
 
 
     def itemChange(self, change, value):
-        if change == QtWidgets.QGraphicsItem.ItemSceneHasChanged and self.scene() is not None:
+        if change == QtWidgets.QGraphicsItem.GraphicsItemChange.ItemSceneHasChanged and self.scene() is not None:
             self.scene().addItem(self.optionsProxy)
 
         return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
@@ -745,11 +745,11 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
 
     def paint(self, painter, option, widget):
 
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(AntiAliasing)
 
         if self.isLayerSelected:
             brush = QtGui.QBrush(QtGui.QColor(255, 40, 40, 200))
-            pen = QtGui.QPen(brush, 12, Qt.SolidLine, Qt.RoundCap)
+            pen = QtGui.QPen(brush, 12, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap)
             painter.setPen(pen)
             painter.setBrush(brush)
         else:
