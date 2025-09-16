@@ -220,9 +220,9 @@ class KPMapScene(QtWidgets.QGraphicsScene):
     def drawBackground(self, painter, rect):
         #if 
         if KP.map.bgName == '/Maps/Water.brres':
-            painter.fillRect(rect, QtGui.QColor(38, 96, 153))
+            painter.fillRect(rect, QtGui.QColor(11, 180, 249))
         elif KP.map.bgName == '/Maps/Lava.brres':
-            painter.fillRect(rect, QtGui.QColor(153, 38, 38))
+            painter.fillRect(rect, QtGui.QColor(255, 63, 0))
         else:
             painter.fillRect(rect, QtGui.QColor(119, 136, 153))
 
