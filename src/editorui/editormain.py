@@ -53,7 +53,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
     def playPause(self):
         if self.playing == False:
             self.playing = True
-            self.views()[0].setViewportUpdateMode(QtWidgets.QGraphicsView.ViewportUpdateMode.NoViewportUpdate)
+            self.views()[0].setViewportUpdateMode(QtWidgets.QGraphicsView.ViewportUpdateMode.MinimalViewportUpdate)
             self.ticker.start()
 
             for timeline in self.timeLines:
@@ -156,7 +156,6 @@ class KPMapScene(QtWidgets.QGraphicsScene):
                 drawLine(QtCore.QLineF(startx, y, endx, y))
                 y += 192
         elif self.grid == 2:
-            # jaja
             L = 0.2
             D = 0.1  # Change these values to change the checkerboard opacity
 
@@ -219,9 +218,9 @@ class KPMapScene(QtWidgets.QGraphicsScene):
 
     def drawBackground(self, painter, rect):
         #if 
-        if KP.map.bgName == '/Maps/Water.brres':
+        if KP.map.bgName == '/Maps/Water.brres' and settings.config["Window"]["water_lava_view"] == "True":
             painter.fillRect(rect, QtGui.QColor(11, 180, 249))
-        elif KP.map.bgName == '/Maps/Lava.brres':
+        elif KP.map.bgName == '/Maps/Lava.brres' and settings.config["Window"]["water_lava_view"] == "True":
             painter.fillRect(rect, QtGui.QColor(255, 63, 0))
         else:
             painter.fillRect(rect, QtGui.QColor(119, 136, 153))

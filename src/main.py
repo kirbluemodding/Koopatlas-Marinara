@@ -20,11 +20,11 @@ class KP:
         #time.sleep(1)
         KP.app = QtWidgets.QApplication(sys.argv)
 
-        # this is like completely Jaja and not the real settings
+        # this settings.ini is NOT to be confused with the one in settings.py, as they both do very different things
         if os.path.isfile('portable.txt'):
-            KP.app.settings = QtCore.QSettings('settings_Koopatlas.ini', QtCore.QSettings.IniFormat)
+            KP.app.settings = QtCore.QSettings('settings_Koopatlas.ini', QtCore.QSettings.Format.IniFormat)
         else:
-            KP.app.settings = QtCore.QSettings('Koopatlas', 'Newer Team')
+            KP.app.settings = QtCore.QSettings('Koopatlas Marinara', 'Newer Team, Realism Studios')
 
         KP.app.setWindowIcon(QtGui.QIcon('Resources/Koopatlas.png'))
 
@@ -85,7 +85,7 @@ class KP:
                 registry[name] = {'path': filepath}
 
         if not foundAnyTilesets:
-            QtWidgets.QMessageBox.warning(None, 'Warning', "Your Tilesets folder seems to be empty. You won't be able to load any world maps without them! You can get Newer Wii's world map and tileset files at <a href=\"https://github.com/Newer-Team/NewerSMBW/tree/clang-no-translations/NewerResources\">the NewerSMBW GitHub</a>.")
+            QtWidgets.QMessageBox.warning(None, 'Warning', "Your Tilesets folder seems to be empty. You won't be able to load any world maps without them! You can get Newer Wii's world map and tileset files at <a href=\"https://github.com/Newer-Team/NewerSMBW/tree/no-translations/NewerResources\">https://github.com/Newer-Team/NewerSMBW/tree/no-translations/NewerResources</a>.")
 
 
     @classmethod

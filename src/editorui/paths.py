@@ -88,8 +88,8 @@ class KPEditorNode(KPEditorItem):
 
             self.setRange(1, 99)
 
-            palette = self.palette()
-            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette = QtWidgets.QApplication.palette()
+            text_color = palette.color(QtGui.QPalette.ColorRole.Text)
             palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
@@ -102,8 +102,8 @@ class KPEditorNode(KPEditorItem):
             self.addItems(['Fade Out', 'Circle Wipe', 'Bowser Wipe', 'Goo Wipe Down',
                            'Mario Wipe', 'Circle Wipe Slow', 'Glitchgasm'])
 
-            palette = self.palette()
-            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette = QtWidgets.QApplication.palette()
+            text_color = palette.color(QtGui.QPalette.ColorRole.Text)
             palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
@@ -113,8 +113,8 @@ class KPEditorNode(KPEditorItem):
         def __init__(self):
             QtWidgets.QCheckBox.__init__(self)
 
-            palette = self.palette()
-            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette = QtWidgets.QApplication.palette()
+            text_color = palette.color(QtGui.QPalette.ColorRole.Text)
             palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
@@ -126,8 +126,8 @@ class KPEditorNode(KPEditorItem):
 
             self.setText('/Maps/*.kpbin')
 
-            palette = self.palette()
-            palette.setColor(QtGui.QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+            palette = QtWidgets.QApplication.palette()
+            text_color = palette.color(QtGui.QPalette.ColorRole.Text)
             palette.setColor(QtGui.QPalette.ColorRole.Window, Qt.GlobalColor.transparent)
 
             self.setPalette(palette)
@@ -379,10 +379,20 @@ class KPEditorNode(KPEditorItem):
         if node.level:
             painter.setBrush(QtGui.QColor(0, 0, 0, 0))
             painter.setPen(QtGui.QColor(0, 0, 0, 0))
-            pix = QtGui.QPixmap("Resources/BlackLevel.png")
+            randomSpecificCaseForNewerW1 = node.level[0] == 80 and node.level[1] == 80 # Yoshi's Island has this random node for world 80-80. I have no idea what this does, but might as well show that it's not really a level to anyone trying to edit the map file.
+            oneTimeLevel = node.level[1] == 31 or node.level[1] == 33 or node.level[1] == 34
+            if node.level[1] == 99:
+                pix = QtGui.QPixmap("Resources/ShopNode.png")
+            elif oneTimeLevel:
+                pix = QtGui.QPixmap("Resources/RedLevel.png")
+            elif node.level[1] < 99 and not node.hasSecret and not randomSpecificCaseForNewerW1:
+                pix = QtGui.QPixmap("Resources/BlueLevel.png")
+            elif node.hasSecret:
+                pix = QtGui.QPixmap("Resources/PurpleLevel.png")
+            else:
+                pix = QtGui.QPixmap("Resources/BlackLevel.png")
             painter.drawPixmap(-pix.width()//2, -pix.height()//2, pix)
             palette = QtWidgets.QApplication.palette()
-            window_color = palette.color(QtGui.QPalette.ColorRole.Window)
             highlight_color = palette.color(QtGui.QPalette.ColorRole.Highlight)
 
             selectionRect = self._boundingRect.adjusted(1,5,-1,-5)
@@ -399,9 +409,10 @@ class KPEditorNode(KPEditorItem):
             painter.drawPixmap(-pix.width()//2, -pix.height()//2, pix)
 
             textPath = QtGui.QPainterPath()
-            font = QtGui.QFont("Times", 22)
+            font = QtGui.QFont("System", 22)
+            font.setBold(True)
             font.setStyleStrategy(QtGui.QFont.StyleStrategy.ForceOutline)
-            textPath.addText(-6, 3, font, str(node.mapID))
+            textPath.addText(-9, 3, font, str(node.mapID))
 
             painter.setBrush(highlight_color)
             pen = QtGui.QPen(text_color)

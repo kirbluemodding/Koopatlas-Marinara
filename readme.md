@@ -2,9 +2,36 @@
 
 An editor for world maps for the custom Koopatlas Engine for New Super Mario Bros. Wii, created by Treeki.
 
-Koopatlas $${\color{red}Marinara}$$ contains a few enhancements for Koopatlas Updated, including PyQt6 support, and whatever else I can come up with.
+Koopatlas $${\color{red}Marinara}$$ contains a few enhancements for Koopatlas Updated, summed up here:
+- Migration to PyQt6, which allows for:
+  - Native dark mode that relies on the system settings rather than "themes" or anything similar
+  - A much cleaner looking base UI
+  - Other QoL features from this migrate as well, probably...
+- Improved UI design
+  - World exit/actual stage nodes now have significantly better renders, and the colors now update depending on if the stage is one-time, has a secret, etc.
+  - KP's World Editor no longer requires manually typing in hex codes, and now has a proper color picker UI
+  - Another grid mode, ported from Reggie-Next
+  - Better organization of the menu bar, with less categories and better option names
+    - Shortcuts for almost every single option, as well
+    - Cutting with Ctrl+X now functions properly (HOW was this never a feature before?!)
+  - Almost every single piece of the UI can now be toggled on/off
+  - The default viewport background color has been changed to be the same as Reggie-Next's, to better fit both light and dark mode
+    - The background color now also changes color automatically if Water.brres or Lava.brres is set
 
-If you have any ideas or suggestions for features/bugfixes, feel free to create an issue and let me know.
+There are currently a few planned features for future releases as well, as listed:
+- Custom themes outside of light/dark mode
+- Custom background color definitions
+- Icons for every option, as well as replacements for the very outdated current set
+- Better World/Level ID spinner for nodes
+- Settings menu
+- "Open recents..." option functionality
+- Proper loading screen for maps, as well as a better general loading time
+- Fix the decently severe lag that occurs when trying to play animations (probably something caused by the migration from PyQt5->PyQt6)
+- Any and all crashes within the UI (or as many as can be found)
+- PyQt5 support, as well as PyQt4 support (maybe)
+- PyQt7+ support in the future
+
+If you have any ideas or suggestions for features/bugfixes, feel free to create an issue in this repository.
 
 ## Original readme below
 

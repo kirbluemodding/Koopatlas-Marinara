@@ -39,7 +39,7 @@ try:
 
     EasingType = QtCore.QEasingCurve.Type
 
-    # two cool singletons. wait does that make them doubletons now? # doubleton comment: AJJA you're such comedy
+    # two cool singletons. wait does that make them doubletons now?
     AntiAliasing = QtGui.QPainter.RenderHint.Antialiasing
     Format_ARGB32 = QtGui.QImage.Format.Format_ARGB32
 
@@ -66,7 +66,7 @@ try:
         return QtGui.QKeySequence(standard)
 
 except (ImportError, NameError):
-    errormsg = 'PyQt6 is not currently installed. Either wait a thousand years for PyQt5 support, or spend 3 seconds installing PyQt6 by running this command: pip install pyqt6.'
+    errormsg = 'PyQt6 is not currently installed. Either wait a thousand years for PyQt5 support, or spend 3 seconds installing PyQt6.'
     raise Exception(errormsg)
 
 Qt = QtCore.Qt

@@ -17,7 +17,7 @@ class KPTilesetChooserDialog(QtWidgets.QDialog):
         self.nameList.sort()
 
         # this piece of the API is kinda shitty but whatever
-        # todo: improve jajas
+        # todo: improve
         self.specials = specials
         if specials:
             self.chooser.addItems(self.specials)

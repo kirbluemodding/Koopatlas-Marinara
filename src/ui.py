@@ -849,7 +849,7 @@ class KPAnmOptions(QtWidgets.QWidget):
 
         #   palette = self.palette()
         #   palette.setColor(QtGui.QPalette.ButtonText, Qt.black)
-        #   palette.setColor(QtGui.QPalette.Window, Qt.transparent)
+        #   palette.setColor(QtGui.QPalette.Window, Qt.GlobalColor.transparent)
 
         #   self.setPalette(palette)
 
@@ -1149,13 +1149,13 @@ class KPMainWindow(QtWidgets.QMainWindow):
         f.addSeparator()
         self.fd = add_action_compat(f,'Save Map',                   self.saveMap, QKeySequence("Ctrl+S"))
         self.fe = add_action_compat(f,'Save Map As...',             self.saveMapAs, QKeySequence("Ctrl+Shift+S"))
-        self.ff = add_action_compat(f,'Export Map...',              self.exportMap, QKeySequence("Ctrl+E"))
-        self.fj = add_action_compat(f,'Batch Save...',              self.batchSave, QKeySequence("Ctrl+Shift+E"))
+        self.ff = add_action_compat(f,'Export Map',                 self.exportMap, QKeySequence("Ctrl+E"))
+        self.fj = add_action_compat(f,'Batch Export',               self.batchSave, QKeySequence("Ctrl+Shift+E"))
         f.addSeparator()
-        self.fg = add_action_compat(f,'Take Screenshot...',         self.screenshot, QKeySequence("Ctrl+Alt+Shift+S"))
-        self.fh = add_action_compat(f,'Export Doodads...',          self.exportDoodads, QKeySequence("Ctrl+Alt+Shift+D"))
+        self.fg = add_action_compat(f,'Take Screenshot',            self.screenshot, QKeySequence("Ctrl+Alt+S"))
+        self.fh = add_action_compat(f,'Export Doodads',             self.exportDoodads, QKeySequence("Ctrl+Alt+E"))
         f.addSeparator()
-        self.fi = add_action_compat(f,'Settings',                self.settingsMenu, QKeySequence("Ctrl+Alt+S"))
+        self.fi = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"))
         f.addSeparator()
         self.fj = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
 
@@ -1177,21 +1177,21 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.lf = add_action_compat(l,'Move Layer to Top',          self.layerList.moveTop, QKeySequence("Ctrl+Shift+Up"))
         self.lg = add_action_compat(l,'Move Layer to Bottom',       self.layerList.moveBottom, QKeySequence("Ctrl+Shift+Down"))
         l.addSeparator()
-        self.li = add_action_compat(l,'Add Doodad...',              self.doodadSelector.addDoodadFromFile, QKeySequence("Ctrl+Shift+R"))
-        self.lh = add_action_compat(l,'Add Tileset...',             self.moveTilesetToFolder, QKeySequence("Ctrl+Shift+T"))
-        self.lj = add_action_compat(l,'Change Tileset...',          self.changeTileset, QKeySequence("Ctrl+Shift+Alt+T"))
+        self.li = add_action_compat(l,'Add Doodad',                 self.doodadSelector.addDoodadFromFile, QKeySequence("Ctrl+Shift+R"))
+        self.lh = add_action_compat(l,'Add Tileset',                self.moveTilesetToFolder, QKeySequence("Ctrl+Shift+T"))
+        self.lj = add_action_compat(l,'Change Tileset',             self.changeTileset, QKeySequence("Ctrl+Shift+Alt+T"))
 
         m = mb.addMenu('Map')
         self.ma = add_action_compat(m,'Play Animations',            self.playAnim, QKeySequence("Ctrl+P"))
         self.mc = add_action_compat(m,'Reset Animations',           self.resetAnim, QKeySequence("Ctrl+Shift+P"))
         m.addSeparator()
-        self.md = add_action_compat(m,'Import Animation Presets...',  self.loadAnimPresets, QKeySequence("Ctrl+Alt+Shift+I"))
-        self.me = add_action_compat(m,'Export Animation Presets...',  self.saveAnimPresets, QKeySequence("Ctrl+Alt+Shift+E"))
+        self.md = add_action_compat(m,'Import Animation Presets',   self.loadAnimPresets, QKeySequence("Ctrl+Alt+Shift+I"))
+        self.me = add_action_compat(m,'Export Animation Presets',   self.saveAnimPresets, QKeySequence("Ctrl+Alt+Shift+E"))
         self.mf = add_action_compat(m,'Clear Animation Presets',    self.clearAnimPresets, QKeySequence("Ctrl+Alt+Shift+C"))
         m.addSeparator()
-        self.mg = add_action_compat(m,'Set Background...',          self.setMapBackground, QKeySequence("Ctrl+Shift+B"))
+        self.mg = add_action_compat(m,'Set Background',             self.setMapBackground, QKeySequence("Ctrl+Shift+B"))
         m.addSeparator()
-        self.mh = add_action_compat(m,'World Editor...',            self.showWorldEditor, QKeySequence("Ctrl+Shift+W"))
+        self.mh = add_action_compat(m,'World Editor',               self.showWorldEditor, QKeySequence("Ctrl+Shift+W"))
 
         v = mb.addMenu('View')
         self.va = add_action_compat(v,'Change Grid Type',           self.showGrid, QKeySequence("Ctrl+G"))
@@ -1201,6 +1201,8 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.vd = add_action_compat(v,'Actual Size',                self.ZoomActual, QKeySequence("Ctrl+="))
         self.vh = add_action_compat(v,'Show Wii Zoom',              self.showWiiZoom, QKeySequence("Ctrl+F"))
         self.vh.setCheckable(True)
+        self.vi = add_action_compat(v,'Show Water/Lava Colors',     self.showHideBackgroundColor, QKeySequence("Ctrl+H"))
+        self.vi.setCheckable(True)
         v.addSeparator()
 
         layerAction = self.layerListDock.toggleViewAction()
@@ -1220,8 +1222,8 @@ class KPMainWindow(QtWidgets.QMainWindow):
         v.addAction(pathAction)
 
         h = mb.addMenu('Help')
-        self.ha = h.addAction('About',            self.aboutDialog)
-        self.hb = h.addAction('Documentation',    self.goToHelp)
+        self.ha = add_action_compat(h,'About',                      self.aboutDialog, QKeySequence("Ctrl+Alt+Shift+A"))
+        self.hb = add_action_compat(h,'Documentation',              self.goToHelp, QKeySequence("Ctrl+Alt+Shift+D"))
 
     def setupDocks(self):
         self.layerList = KPLayerList()
@@ -1410,7 +1412,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
         target = unicode(QFileDialog_getOpenFileName(
             self, 'Open Map', '', 'Koopatlas map (*.kpmap)'))
         if len(target) == 0: 
-            QtWidgets.QMessageBox.error(self, "Error", "Pick out a vaild file to load, please.")
             return
         settings.config["File"]["LastMapOpen"] = target
 
@@ -1418,7 +1419,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
     def openRecent(self):
         #self.openMapFromPath(target)
-        QtWidgets.QMessageBox.information(self, "Not Quite...", "This feature is planned for a later release. For now, enjoy opening files manually.")
+        QtWidgets.QMessageBox.information(self, "Not quite...", "This feature is planned for a later release. For now, it looks like you have to open KPMAP files manually...")
 
     def openMapFromPath(self, target):
         import mapfile
@@ -1430,7 +1431,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.refreshMapState()
 
     def settingsMenu(self):
-        QtWidgets.QMessageBox.information(self, "Not Quite...", "A full settings menu is planned for a later release. For now, enjoy the program only remembering select things on the tool-bar...")
+        QtWidgets.QMessageBox.information(self, "Not quite...", "A full settings menu is planned for a later release. It seems you'll have to endure manually editing the settings.ini as of right now.")
     
     def closeWarning(self):
         reply = QtWidgets.QMessageBox.warning(self, "Warning", "Are you sure you want to quit? Any unsaved data will be lost.",
@@ -1482,7 +1483,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
             if item == "Current Window":
                 ScreenshotImage = QtGui.QImage(self.editor.width(), self.editor.height(), Format_ARGB32)
-                ScreenshotImage.fill(QtCore.Qt.transparent)
+                ScreenshotImage.fill(QtCore.Qt.GlobalColor.transparent)
 
                 RenderPainter = QtGui.QPainter(ScreenshotImage)
                 self.editor.render(RenderPainter, QtCore.QRectF(0,0,self.editor.width(),  self.editor.height()), QtCore.QRect(QtCore.QPoint(0,0), QtCore.QSize(self.editor.width(),  self.editor.height())))
@@ -1491,7 +1492,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
             else:
 
                 ScreenshotImage = QtGui.QImage(self.scene.itemsBoundingRect().width()+100, self.scene.itemsBoundingRect().height()+100, Format_ARGB32)
-                ScreenshotImage.fill(QtCore.Qt.transparent)
+                ScreenshotImage.fill(QtCore.Qt.GlobalColor.transparent)
 
                 RenderPainter = QtGui.QPainter(ScreenshotImage)
                 self.scene.render(RenderPainter, QtCore.QRectF(ScreenshotImage.rect()), self.scene.itemsBoundingRect().adjusted(-50.0, -50.0, 50.0, 50.0))
@@ -1527,6 +1528,14 @@ class KPMainWindow(QtWidgets.QMainWindow):
                 obj.export(target + "/" + fileName[:-6] + '.kpbin')
 
                 print('Saved and Exported {0}'.format(fileName[:-6]))
+
+
+    def showHideBackgroundColor(self):
+        if settings.config["Window"]["water_lava_view"] == "True":
+            settings.config["Window"]["water_lava_view"] = "False"
+        else:
+            settings.config["Window"]["water_lava_view"] = "True"
+
 
 
 # Edit
@@ -1714,7 +1723,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
 ########################
     def setMapBackground(self):
         from dialogs import getTextDialog
-        newBG = getTextDialog('Map Background', 'Enter a path (ex. /Maps/Water.brres or /Maps/Lava.brres):', KP.map.bgName)
+        newBG = getTextDialog('Map Background', 'Enter a path (ex. /Maps/Water.brres, /Maps/Lava.brres):', KP.map.bgName)
         if newBG is not None:
             KP.map.bgName = newBG
         # whenever you change it to lava and it does that. So you have to update you're canvases.
@@ -1793,10 +1802,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
         caption = "About Koopatlas Marinara"
 
         text = "<big><b>Koopatlas</b></big><br><br>" \
-        "<p>The Koopatlas Editor is an editor for custom two dimensional world maps, for use with the Newer SMBWii world map engine. It should be included with its companion program, Koopuzzle, which will create tilesets compatible with Koopatlas.<br><br>" \
+        "<p>The Koopatlas Editor is an editor for custom two dimensional world maps, for use with the NewerSMBW world map engine. It should be used in tandem with its companion program, Koopuzzle, which creates tilesets for use with Koopatlas.<br><br>" \
         "Koopatlas was programmed by Treeki and Tempus of the Newer Team.<br><br>" \
-        "Find the website at <a href=\"www.newerteam.com\">www.newerteam.com</a> for more information.<br><br>" \
-        "Koopatlas <span style=\"color:red;\">𝓜𝓪𝓻𝓲𝓷𝓪𝓻𝓪</span> is an unofficial mod created by Kirblue containing new enhancements, namely bug fixes, and a reminder to save your work."
+        "Koopatlas <span style=\"color:red;\">𝓜𝓪𝓻𝓲𝓷𝓪𝓻𝓪</span> is a fork of Koopatlas, enhanced with RoadrunnerWMC's bugfixes from Koopatlas-Updated and many other planned/released features."
         
 
 

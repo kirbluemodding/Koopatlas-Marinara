@@ -5,13 +5,13 @@ import os.path
 # NSMBW-related projects that use the same technologies (Reggie, Puzzle,
 # BRFNTify, etc)
 
-PROJECT_NAME = 'Koopatlas'
-FULL_PROJECT_NAME = "Koopatlas - Newer's Fantastic World Map Editor"
+PROJECT_NAME = 'Koopatlas Marinara'
+FULL_PROJECT_NAME = "Koopatlas Marinara - Newer's Fantastic World Map Editor"
 PROJECT_VERSION = '1.0'
 
 WIN_ICON = os.path.join('Resources', 'Koopatlas.ico')
 MAC_ICON = os.path.join('Resources', 'Koopatlas.icns')
-MAC_BUNDLE_IDENTIFIER = 'com.newerteam.koopatlas'
+MAC_BUNDLE_IDENTIFIER = 'com.realismstudios.koopatlas-marinara'
 
 SCRIPT_FILE = 'koopatlas.py'
 DATA_FOLDERS = ['Resources', 'Tilesets']
