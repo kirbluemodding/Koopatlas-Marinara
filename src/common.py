@@ -50,8 +50,12 @@ try:
     ZoomIn    = QtGui.QKeySequence.StandardKey.ZoomIn
     ZoomOut   = QtGui.QKeySequence.StandardKey.ZoomOut
 
-    def add_action_compat(menu_or_toolbar, text, slot=None, shortcut=None, parent=None):
-        action = QtGui.QAction(text, parent or menu_or_toolbar)
+    def add_action_compat(menu_or_toolbar, text, slot=None, shortcut=None, icon=None, parent=None):
+        if icon is not None:
+            action = QtGui.QAction(icon, text, parent or menu_or_toolbar)
+        else:
+            action = QtGui.QAction(text, parent or menu_or_toolbar)
+
         if shortcut is not None:
             action.setShortcut(QtGui.QKeySequence(shortcut))
         if slot is not None:

@@ -382,15 +382,15 @@ class KPEditorNode(KPEditorItem):
             randomSpecificCaseForNewerW1 = node.level[0] == 80 and node.level[1] == 80 # Yoshi's Island has this random node for world 80-80. I have no idea what this does, but might as well show that it's not really a level to anyone trying to edit the map file.
             oneTimeLevel = node.level[1] == 31 or node.level[1] == 33 or node.level[1] == 34
             if node.level[1] == 99:
-                pix = QtGui.QPixmap("Resources/ShopNode.png")
+                pix = QtGui.QPixmap("Resources/Icon/ShopNode.png")
             elif oneTimeLevel:
-                pix = QtGui.QPixmap("Resources/RedLevel.png")
+                pix = QtGui.QPixmap("Resources/Icon/RedLevel.png")
             elif node.level[1] < 99 and not node.hasSecret and not randomSpecificCaseForNewerW1:
-                pix = QtGui.QPixmap("Resources/BlueLevel.png")
+                pix = QtGui.QPixmap("Resources/Icon/BlueLevel.png")
             elif node.hasSecret:
-                pix = QtGui.QPixmap("Resources/PurpleLevel.png")
+                pix = QtGui.QPixmap("Resources/Icon/PurpleLevel.png")
             else:
-                pix = QtGui.QPixmap("Resources/BlackLevel.png")
+                pix = QtGui.QPixmap("Resources/Icon/BlackLevel.png")
             painter.drawPixmap(-pix.width()//2, -pix.height()//2, pix)
             palette = QtWidgets.QApplication.palette()
             highlight_color = palette.color(QtGui.QPalette.ColorRole.Highlight)
@@ -405,7 +405,7 @@ class KPEditorNode(KPEditorItem):
 
             painter.setBrush(window_color)
             painter.setPen(window_color)
-            pix = QtGui.QPixmap("Resources/ExitWorld.png")
+            pix = QtGui.QPixmap("Resources/Icon/ExitWorld.png")
             painter.drawPixmap(-pix.width()//2, -pix.height()//2, pix)
 
             textPath = QtGui.QPainterPath()
@@ -426,7 +426,7 @@ class KPEditorNode(KPEditorItem):
         elif node.worldDefID is not None:
             painter.setBrush(QtGui.QColor(0, 0, 0, 0))
             painter.setPen(QtGui.QColor(0, 0, 0, 0))
-            painter.drawPixmap(self._worldChangeRect.topLeft(), QtGui.QPixmap("Resources/WorldChange.png"))
+            painter.drawPixmap(self._worldChangeRect.topLeft(), QtGui.QPixmap("Resources/Icon/WorldChange.png"))
             selectionRect = self._worldChangeRect
 
         elif len(node.exits) != 2:
@@ -589,7 +589,7 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
                 j = 1
                 id = 0
                 for anim, name, note in zip(PathAnimationList, PathAnimationNamesList, PathAnimationNotesList):
-                    newButton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Anm/" + anim), "")
+                    newButton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Anim/" + anim), "")
                     newButton.setCheckable(True)
                     newButton.setIconSize(QtCore.QSize(38, 38))
                     tooltip = name

@@ -382,7 +382,7 @@ class KPLayerList(QtWidgets.QWidget):
         self.actRemove = tb.addAction(KP.icon('LayerRemove'), 'Remove', self.removeLayer)
         self.actMoveUp = tb.addAction(QtGui.QIcon(), 'Move Up', self.moveUp)
         self.actMoveDown = tb.addAction(QtGui.QIcon(), 'Move Down', self.moveDown)
-        self.actPlayPause = tb.addAction(KP.icon('APlay'), 'Play', self.toggleAnimatingScene)
+        self.actPlayPause = tb.addAction(KP.icon('Play'), 'Play', self.toggleAnimatingScene)
 
     def toggleAnimatingScene(self):
         self.playPaused.emit()
@@ -890,13 +890,13 @@ class KPAnmOptions(QtWidgets.QWidget):
 
 
         # Add/Remove Animation Buttons
-        addbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Plus.png"), "")
-        rembutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Minus.png"), "")
-        presetbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/AddPreset.png"), "Add Preset")
-        newpbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/NewPreset.png"), "New Preset")
-        # savebutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/SavePreset.png"), "Save")
-        # loadbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/LoadPreset.png"), "Load")
-        # clearbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/ClearPreset.png"), "Clear")
+        addbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Plus.png"), "")
+        rembutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Minus.png"), "")
+        presetbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/AddPreset.png"), "Add Preset")
+        newpbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/NewPreset.png"), "New Preset")
+        # savebutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/SavePreset.png"), "Save")
+        # loadbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/LoadPreset.png"), "Load")
+        # clearbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/ClearPreset.png"), "Clear")
         BottomLayout.addWidget(addbutton, 1, 0, 1, 1)
         BottomLayout.addWidget(rembutton, 1, 1, 1, 1)
         BottomLayout.addWidget(QtWidgets.QLabel(""), 1, 2, 1, 2)
@@ -1145,7 +1145,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         f = mb.addMenu('&File')
         self.fa = add_action_compat(f,'New',                        self.newMap, QKeySequence("Ctrl+N"))
         self.fb = add_action_compat(f,'Open...',                    self.openMap, QKeySequence("Ctrl+O"))
-        self.fc = add_action_compat(f,'Open Recent',                self.openRecent, QKeySequence("Ctrl+Shift+O"))
+        self.fc = add_action_compat(f,'Open Recent',                self.openRecent, QKeySequence("Ctrl+Shift+O"), KP.icon('BetaFeature'))
         f.addSeparator()
         self.fd = add_action_compat(f,'Save Map',                   self.saveMap, QKeySequence("Ctrl+S"))
         self.fe = add_action_compat(f,'Save Map As...',             self.saveMapAs, QKeySequence("Ctrl+Shift+S"))
@@ -1155,7 +1155,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.fg = add_action_compat(f,'Take Screenshot',            self.screenshot, QKeySequence("Ctrl+Alt+S"))
         self.fh = add_action_compat(f,'Export Doodads',             self.exportDoodads, QKeySequence("Ctrl+Alt+E"))
         f.addSeparator()
-        self.fi = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"))
+        self.fi = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"), KP.icon('BetaFeature'))
         f.addSeparator()
         self.fj = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
 
@@ -1196,8 +1196,8 @@ class KPMainWindow(QtWidgets.QMainWindow):
         v = mb.addMenu('View')
         self.va = add_action_compat(v,'Change Grid Type',           self.showGrid, QKeySequence("Ctrl+G"))
         v.addSeparator()
-        self.vb = add_action_compat(v,'Zoom In',                    self.ZoomIn, QKeySequence.StandardKey.ZoomIn)
-        self.vc = add_action_compat(v,'Zoom Out',                   self.ZoomOut, QKeySequence.StandardKey.ZoomOut)
+        self.vb = add_action_compat(v,'Zoom In',                   self.ZoomIn, QKeySequence.StandardKey.ZoomIn, KP.icon('ZoomIn'))
+        self.vc = add_action_compat(v,'Zoom Out',                   self.ZoomOut, QKeySequence.StandardKey.ZoomOut, KP.icon('ZoomOut'))
         self.vd = add_action_compat(v,'Actual Size',                self.ZoomActual, QKeySequence("Ctrl+="))
         self.vh = add_action_compat(v,'Show Wii Zoom',              self.showWiiZoom, QKeySequence("Ctrl+F"))
         self.vh.setCheckable(True)
@@ -1639,11 +1639,11 @@ class KPMainWindow(QtWidgets.QMainWindow):
     def playButtonChanged(self):
         if self.scene.playing:
             self.ma.setText('Stop Animations')
-            self.layerList.actPlayPause.setIcon(KP.icon('AStop'))
+            self.layerList.actPlayPause.setIcon(KP.icon('Pause'))
             self.layerList.actPlayPause.setText('Stop')
         else:
             self.ma.setText('Play Animations')
-            self.layerList.actPlayPause.setIcon(KP.icon('APlay'))
+            self.layerList.actPlayPause.setIcon(KP.icon('Play'))
             self.layerList.actPlayPause.setText('Play')
 
     def resetAnim(self):

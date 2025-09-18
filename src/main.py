@@ -26,7 +26,7 @@ class KP:
         else:
             KP.app.settings = QtCore.QSettings('Koopatlas Marinara', 'Newer Team, Realism Studios')
 
-        KP.app.setWindowIcon(QtGui.QIcon('Resources/Koopatlas.png'))
+        KP.app.setWindowIcon(QtGui.QIcon('Resources/Icon/Koopatlas.png'))
 
         from mapdata import KPMap
         KP.map = KPMap()
@@ -57,7 +57,7 @@ class KP:
         try:
             return cache[name]
         except KeyError:
-            icon = QtGui.QIcon('Resources/%s.png' % name)
+            icon = QtGui.QIcon('Resources/Icon/%s.png' % name)
             cache[name] = icon
             return icon
 
