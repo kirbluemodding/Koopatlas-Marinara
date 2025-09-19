@@ -171,5 +171,11 @@ def getTextDialog(title, label, existingText=''):
     else:
         return None
 
+def CorruptMapError():
+    caption = "Corrupted Data"
+
+    text = "A map file has been loaded or autoloaded, but it was corrupt and/or not a valid map; so we didn't actually load it."
+
+    msg = QtWidgets.QMessageBox.critical(KP.mainWindow, caption, text)
 
 

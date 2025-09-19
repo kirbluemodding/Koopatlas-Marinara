@@ -1105,7 +1105,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.setupDocks()
         self.setupMenuBar()
         self.setupStatusBar()
-
         self.refreshMapState()
 
     def _createAction(self, internalName, callback, title):
@@ -1425,7 +1424,10 @@ class KPMainWindow(QtWidgets.QMainWindow):
         import mapfile
         with open(target, 'rb') as file:
             obj = mapfile.load(file.read())
-        obj.filePath = target
+        try:
+            obj.filePath = target
+        except:
+            return
         KP.map = obj
         KP.map.filePath = target
         self.refreshMapState()
@@ -1439,6 +1441,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
         )
         if reply == QtWidgets.QMessageBox.StandardButton.Ok:
             self.close()
+        
+    def closeEvent(self, event):
+        self.closeWarning()
 
     def saveMap(self, forceNewName=False):
         target = KP.map.filePath
@@ -1718,6 +1723,12 @@ class KPMainWindow(QtWidgets.QMainWindow):
         settings.setValue('AnimationPresets', mapfile.dump([]))
         settings.setValue('AnimationPresetData', mapfile.dump([]))
 
+# File
+########################
+    def showSettings(self):
+        from settings import KPSettings
+        self.dlg = KPSettings()
+        self.dlg.show()
 
 # Map
 ########################
@@ -1808,7 +1819,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         
 
 
-        msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)
+        msg = QtWidgets.QMessageBox.a(KP.mainWindow, caption, text)
 
     def goToHelp(self):
         QtGui.QDesktopServices().openUrl(QtCore.QUrl('http://www.newerteam.com/koopatlas-help'))

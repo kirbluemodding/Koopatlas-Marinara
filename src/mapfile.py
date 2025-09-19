@@ -1,6 +1,7 @@
 from common import *
 import base64
 import json
+from dialogs import *
 
 DUMPABLE_CLASSES_BY_NAME = {}
 DUMPABLE_CLASS_NAMES = {}
@@ -90,8 +91,11 @@ def load(string):
             needsSpecialCare.append((obj, source))
 
         return obj
-
-    root = json.loads(string.decode('utf-8'), object_hook=_loadObject)
+    try:
+        root = json.loads(string.decode('utf-8'), object_hook=_loadObject)
+    except:
+        CorruptMapError()
+        return
 
     # variables
     total = 0
@@ -108,6 +112,7 @@ def load(string):
         n += 1
         KP.mainWindow.loadbar.setValue(n)
         obj._load(root, source)
+    #KP.mainWindow.loadbar.setValue(0)
 
     return root
 
