@@ -1104,7 +1104,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
         self.setupDocks()
         self.setupMenuBar()
-        self.setupStatusBar()
         self.refreshMapState()
 
     def _createAction(self, internalName, callback, title):
@@ -1120,15 +1119,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self._createAction('open', self.openMap, '&Open...')
         self._createAction('save', self.saveMap, '&Save')
         self._createAction('saveAs', self.saveMapAs, 'Save &As...')
-
-    # scrapped
-    def setupStatusBar(self):
-        self.status_bar = self.statusBar()
-        self.caps_lock_label = QtWidgets.QLabel("Caps Lock: OFF") # lmao
-        self.loadbar = QtWidgets.QProgressBar()
-        self.loadbar.setMinimum(0)
-        #self.loadbar.setValue(10)
-        self.status_bar.addPermanentWidget(self.loadbar)
 
     def loadLastMap(self):
         target = settings.config["File"]["LastMapOpen"]
@@ -1149,14 +1139,14 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.fd = add_action_compat(f,'Save Map',                   self.saveMap, QKeySequence("Ctrl+S"))
         self.fe = add_action_compat(f,'Save Map As...',             self.saveMapAs, QKeySequence("Ctrl+Shift+S"))
         self.ff = add_action_compat(f,'Export Map',                 self.exportMap, QKeySequence("Ctrl+E"))
-        self.fj = add_action_compat(f,'Batch Export',               self.batchSave, QKeySequence("Ctrl+Shift+E"))
+        self.fg = add_action_compat(f,'Batch Export',               self.batchSave, QKeySequence("Ctrl+Shift+E"))
         f.addSeparator()
-        self.fg = add_action_compat(f,'Take Screenshot',            self.screenshot, QKeySequence("Ctrl+Alt+S"))
-        self.fh = add_action_compat(f,'Export Doodads',             self.exportDoodads, QKeySequence("Ctrl+Alt+E"))
+        self.fh = add_action_compat(f,'Take Screenshot',            self.screenshot, QKeySequence("Ctrl+Alt+S"))
+        self.fi = add_action_compat(f,'Export Doodads',             self.exportDoodads, QKeySequence("Ctrl+Alt+E"))
         f.addSeparator()
-        self.fi = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"), KP.icon('BetaFeature'))
+        self.fj = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"), KP.icon('BetaFeature'))
         f.addSeparator()
-        self.fj = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
+        self.fk = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
 
         e = mb.addMenu('Edit')
         self.ea = add_action_compat(e,'Copy',                       self.copy, QKeySequence.StandardKey.Copy)
@@ -1433,7 +1423,10 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.refreshMapState()
 
     def settingsMenu(self):
-        QtWidgets.QMessageBox.information(self, "Not quite...", "A full settings menu is planned for a later release. It seems you'll have to endure manually editing the settings.ini as of right now.")
+        from settings import KPSettings
+        # self.dlg is dumb hack to keep a reference in memory while this does nothing
+        self.dlg = KPSettings()
+        self.dlg.show()
     
     def closeWarning(self):
         reply = QtWidgets.QMessageBox.warning(self, "Warning", "Are you sure you want to quit? Any unsaved data will be lost.",
@@ -1540,6 +1533,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
             settings.config["Window"]["water_lava_view"] = "False"
         else:
             settings.config["Window"]["water_lava_view"] = "True"
+        self.refreshMapState()
 
 
 

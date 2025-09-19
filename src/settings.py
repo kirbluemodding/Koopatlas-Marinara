@@ -1,13 +1,16 @@
 import configparser
 import os
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
 
 settings_default = """
 [Window]
 grid_type = 0
-water_lava_view =
+water_lava_view = False
 
 [File]
 LastMapOpen =
+OpenLastMap =
 """
 
 class settings:
@@ -29,4 +32,34 @@ class settings:
         with open("settings.ini", "w") as f:
             settings.config.write(f)
 
-settings._insure()
+#settings._insure()
+
+
+class KPSettings(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Settings")
+        self.resize(300, 200)
+        main_layout = QGridLayout(self)
+        self.setLayout(main_layout)
+
+        # create a tab widget
+        tab = QTabWidget(self)
+
+        general_page = QWidget(self)
+        general_layout = QFormLayout()
+        general_page.setLayout(general_layout)
+        general_layout.addRow("Load last map open:", QCheckBox(self))
+
+        appearence_page = QWidget(self)
+        appearence_layout = QFormLayout()
+        appearence_page.setLayout(appearence_layout)
+        appearence_layout.addRow("Map Canvas", QLabel(self))
+
+        # add pane to the tab widget
+        tab.addTab(general_page, "General")
+        tab.addTab(appearence_page, "Appearence")
+
+        main_layout.addWidget(tab, 0, 0, 2, 1)
+        main_layout.addWidget(QPushButton('Save'), 2, 0, alignment=Qt.AlignmentFlag.AlignLeft)
+        main_layout.addWidget(QPushButton('Cancel'), 2, 0, alignment=Qt.AlignmentFlag.AlignRight)
