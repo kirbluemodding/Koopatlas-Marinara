@@ -156,7 +156,6 @@ class KPMapScene(QtWidgets.QGraphicsScene):
                 drawLine(QtCore.QLineF(startx, y, endx, y))
                 y += 192
         elif self.grid == 2:
-            # jaja
             L = 0.4
             D = 0.2  # Change these values to change the checkerboard opacity
             L = 0.2

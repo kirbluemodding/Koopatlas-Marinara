@@ -94,7 +94,7 @@ def load(string):
     try:
         root = json.loads(string.decode('utf-8'), object_hook=_loadObject)
     except:
-        CorruptMapError()
+        corruptMapError()
         return
 
     # variables
