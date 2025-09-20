@@ -97,6 +97,9 @@ def load(string):
         corruptMapError()
         return
 
+    for obj, source in needsSpecialCare:
+        obj._load(root, source)
+
     return root
 
 
