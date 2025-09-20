@@ -49,7 +49,7 @@ class KPPathNodeList(QtWidgets.QWidget):
                     node = self.associate
 
                     if node.level:
-                        return KP.icon('BlackLevel')
+                        return KP.icon('BlueLevel')
                     elif node.mapChange is not None:
                         return KP.icon('Exit')
                     elif len(node.exits) != 2:
@@ -58,14 +58,14 @@ class KPPathNodeList(QtWidgets.QWidget):
                         return KP.icon('Through')
 
                 else:
-                    return KP.icon('LayerPath')
+                    return KP.icon('Path')
 
             elif role == ItemDataRole.DisplayRole:
                 if isinstance(self.associate, KPNode):
                     node = self.associate
 
                     if node.level:
-                        return "Level: {0}".format(node.level)
+                        return "Stage: {0}".format(node.level)
                     elif node.mapChange is not None:
                         return "Exit: World {0}, entrance {1}".format(node.mapID, node.foreignID)
                     elif len(node.exits) == 3:
@@ -131,9 +131,9 @@ class KPPathNodeList(QtWidgets.QWidget):
             self.loadLayer(layer)
 
     def setupToolbar(self, tb):
-        self.actAddFolder = tb.addAction(KP.icon('NewFolder'), 'Add Folder', self.addFolder)
-        self.actRemoveFolder = tb.addAction(KP.icon('DelFolder'), 'Remove Folder', self.removeFolder)
-        self.selectTileset = tb.addAction(KP.icon('LayerNewTile'), 'Select Tileset', self.setTileset)
+        self.actAddFolder = tb.addAction(KP.icon('FolderAdd'), 'Add Folder', self.addFolder)
+        self.actRemoveFolder = tb.addAction(KP.icon('FolderRemove'), 'Remove Folder', self.removeFolder)
+        self.changeTileset = tb.addAction(KP.icon('TilesetChange'), 'Change Tileset', self.setTileset)
 
     def handleRowChanged(self, currentItem, previousItem):
         currentIsNodeItem = isinstance(currentItem, self.KPPathNodeItem)
@@ -377,12 +377,12 @@ class KPLayerList(QtWidgets.QWidget):
         self.setButtonStates()
 
     def setupToolbar(self, tb):
-        self.actAddTile = tb.addAction(KP.icon('LayerNewTile'), 'Add Tile Layer', self.addTileLayer)
-        self.actAddDoodad = tb.addAction(KP.icon('LayerNewObjects'), 'Add Doodad Layer', self.addDoodadLayer)
-        self.actRemove = tb.addAction(KP.icon('LayerRemove'), 'Remove', self.removeLayer)
-        self.actMoveUp = tb.addAction(QtGui.QIcon(), 'Move Up', self.moveUp)
-        self.actMoveDown = tb.addAction(QtGui.QIcon(), 'Move Down', self.moveDown)
-        self.actPlayPause = tb.addAction(KP.icon('Play'), 'Play', self.toggleAnimatingScene)
+        self.actAddTile = tb.addAction(KP.icon('TilesetAdd'), 'Add Tileset Layer', self.addTileLayer)
+        self.actAddDoodad = tb.addAction(KP.icon('DoodadAdd'), 'Add Doodad Layer', self.addDoodadLayer)
+        self.actMoveUp = tb.addAction(KP.icon('Up'), 'Move Up', self.moveUp)
+        self.actMoveDown = tb.addAction(KP.icon('Down'), 'Move Down', self.moveDown)
+        self.actRemove = tb.addAction(KP.icon('Minus'), 'Remove Layer', self.removeLayer)
+        self.actPlayPause = tb.addAction(KP.icon('Play'), 'Play Animations', self.toggleAnimatingScene)
 
     def toggleAnimatingScene(self):
         self.playPaused.emit()
@@ -873,10 +873,10 @@ class KPAnmOptions(QtWidgets.QWidget):
         delegate = self.AnmDelegate()
         self.anmTable.setItemDelegate(delegate)
 
-        self.model.setHorizontalHeaderLabels(["Looping", "Interpolation", "Frame Len", "Type", "Start Value", "End Value", "Delay", "Delay Offset"])
-        self.anmTable.setColumnWidth(0, 150)
+        self.model.setHorizontalHeaderLabels(["Loop Type", "Interpolation", "Frame Length", "Animation Type", "Start Value", "End Value", "Delay", "Delay Offset"])
+        self.anmTable.setColumnWidth(0, 125)
         self.anmTable.setColumnWidth(1, 100)
-        self.anmTable.setColumnWidth(2, 65)
+        self.anmTable.setColumnWidth(2, 100)
         self.anmTable.setColumnWidth(3, 120)
         self.anmTable.setColumnWidth(4, 65)
         self.anmTable.setColumnWidth(5, 65)
@@ -890,16 +890,15 @@ class KPAnmOptions(QtWidgets.QWidget):
 
 
         # Add/Remove Animation Buttons
-        addbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Plus.png"), "")
-        rembutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Minus.png"), "")
-        presetbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/AddPreset.png"), "Add Preset")
-        newpbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/NewPreset.png"), "New Preset")
+        addbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Plus.png"), "Add Row")
+        rembutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Minus.png"), "Remove Row")
+        presetbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/Preset.png"), "Add Preset")
+        newpbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/PresetAdd.png"), "New Preset")
         # savebutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/SavePreset.png"), "Save")
         # loadbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/LoadPreset.png"), "Load")
         # clearbutton = QtWidgets.QPushButton(QtGui.QIcon("Resources/Icon/ClearPreset.png"), "Clear")
         BottomLayout.addWidget(addbutton, 1, 0, 1, 1)
         BottomLayout.addWidget(rembutton, 1, 1, 1, 1)
-        BottomLayout.addWidget(QtWidgets.QLabel(""), 1, 2, 1, 2)
         BottomLayout.addWidget(presetbutton, 1, 6, 1, 1)
         BottomLayout.addWidget(newpbutton, 1, 7, 1, 1)
         # BottomLayout.addWidget(savebutton, 1, 6, 1, 1)
@@ -1084,7 +1083,7 @@ class KPAnmOptions(QtWidgets.QWidget):
 
         self.update()
         if KP.mainWindow.scene.playing and shouldRestartAnims:
-            KP.mainWindow.resetAnim()
+            KP.mainWindow.stopAnim()
 
 
 class KPMainWindow(QtWidgets.QMainWindow):
@@ -1132,87 +1131,97 @@ class KPMainWindow(QtWidgets.QMainWindow):
         QKeySequence = QtGui.QKeySequence
 
         f = mb.addMenu('&File')
-        self.fa = add_action_compat(f,'New',                        self.newMap, QKeySequence("Ctrl+N"))
-        self.fb = add_action_compat(f,'Open...',                    self.openMap, QKeySequence("Ctrl+O"))
-        self.fc = add_action_compat(f,'Open Recent',                self.openRecent, QKeySequence("Ctrl+Shift+O"), KP.icon('BetaFeature'))
+        self.fa = add_action_compat(f,'New',                        self.newMap, QKeySequence("Ctrl+N"), KP.icon('NewFile'))
         f.addSeparator()
-        self.fd = add_action_compat(f,'Save Map',                   self.saveMap, QKeySequence("Ctrl+S"))
-        self.fe = add_action_compat(f,'Save Map As...',             self.saveMapAs, QKeySequence("Ctrl+Shift+S"))
-        self.ff = add_action_compat(f,'Export Map',                 self.exportMap, QKeySequence("Ctrl+E"))
-        self.fg = add_action_compat(f,'Batch Export',               self.batchSave, QKeySequence("Ctrl+Shift+E"))
+        self.fb = add_action_compat(f,'Open...',                    self.openMap, QKeySequence("Ctrl+O"), KP.icon('FolderOpen'))
+        self.fc = add_action_compat(f,'Open Recent',                self.openRecent, QKeySequence("Ctrl+Shift+O"), KP.icon('FolderMany'))
         f.addSeparator()
-        self.fh = add_action_compat(f,'Take Screenshot',            self.screenshot, QKeySequence("Ctrl+Alt+S"))
-        self.fi = add_action_compat(f,'Export Doodads',             self.exportDoodads, QKeySequence("Ctrl+Alt+E"))
+        self.fd = add_action_compat(f,'Save Map',                   self.saveMap, QKeySequence("Ctrl+S"), KP.icon('Save'))
+        self.fe = add_action_compat(f,'Save Map As...',             self.saveMapAs, QKeySequence("Ctrl+Shift+S"), KP.icon('SaveMany'))
+        self.ff = add_action_compat(f,'Export Map',                 self.exportMap, QKeySequence("Ctrl+E"), KP.icon('Export'))
+        self.fg = add_action_compat(f,'Batch Export',               self.batchSave, QKeySequence("Ctrl+Shift+E"), KP.icon('ExportMany'))
+        self.fh = add_action_compat(f,'Export Doodads',             self.exportDoodads, QKeySequence("Ctrl+Alt+E"), KP.icon('ExportDoodads'))
         f.addSeparator()
-        self.fj = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"), KP.icon('BetaFeature'))
+        self.fi = add_action_compat(f,'Take Screenshot',            self.screenshot, QKeySequence("Ctrl+Alt+S"), KP.icon('Screenshot'))
         f.addSeparator()
-        self.fk = add_action_compat(f,'Quit',                       self.closeWarning, QKeySequence("Ctrl+Q"))
+        self.fj = add_action_compat(f,'Settings',                   self.settingsMenu, QKeySequence("Ctrl+Shift+S"), KP.icon('Settings'))
+        f.addSeparator()
+        self.fk = add_action_compat(f,'Quit',                       self.close, QKeySequence("Ctrl+Q"), KP.icon('X'))
 
         e = mb.addMenu('Edit')
-        self.ea = add_action_compat(e,'Copy',                       self.copy, QKeySequence.StandardKey.Copy)
-        self.eb = add_action_compat(e,'Cut',                        self.cut, QKeySequence.StandardKey.Cut)
-        self.ec = add_action_compat(e,'Paste',                      self.paste, QKeySequence.StandardKey.Paste)
+        self.ea = add_action_compat(e,'Copy',                       self.copy, QKeySequence.StandardKey.Copy, KP.icon('Copy'))
+        self.eb = add_action_compat(e,'Cut',                        self.cut, QKeySequence.StandardKey.Cut, KP.icon('Cut'))
+        self.ec = add_action_compat(e,'Paste',                      self.paste, QKeySequence.StandardKey.Paste, KP.icon('Paste'))
         e.addSeparator()
-        self.ed = add_action_compat(e,'Select All',                 self.selectAll, QKeySequence.StandardKey.SelectAll)
-        self.ee = add_action_compat(e,'Deselect',                   self.deSelect, QKeySequence("Ctrl+D"))
+        self.ed = add_action_compat(e,'Undo',                       self.undo, QKeySequence.StandardKey.Undo, KP.icon('Undo'))
+        self.ee = add_action_compat(e,'Redo',                       self.redo, QKeySequence.StandardKey.Redo, KP.icon('Redo'))
+        e.addSeparator()
+        self.ef = add_action_compat(e,'Select All',                 self.selectAll, QKeySequence.StandardKey.SelectAll, KP.icon('SelectAll'))
+        self.eg = add_action_compat(e,'Deselect',                   self.deSelect, QKeySequence("Ctrl+D"), KP.icon('Deselect'))
 
         l = mb.addMenu('Layers')
-        self.la = add_action_compat(l,'Add Tileset Layer',          self.layerList.addTileLayer, QKeySequence("Ctrl+T"))
-        self.lb = add_action_compat(l,'Add Doodad Layer',           self.layerList.addDoodadLayer, QKeySequence("Ctrl+R"))
-        self.lc = add_action_compat(l,'Remove Layer',               self.layerList.removeLayer, QKeySequence("Ctrl+Del"))
+        self.la = add_action_compat(l,'Add Tileset Layer',          self.layerList.addTileLayer, QKeySequence("Ctrl+T"), KP.icon('TilesetAdd'))
+        self.lb = add_action_compat(l,'Add Doodad Layer',           self.layerList.addDoodadLayer, QKeySequence("Ctrl+R"), KP.icon('DoodadAdd'))
+        self.lc = add_action_compat(l,'Remove Layer',               self.layerList.removeLayer, QKeySequence("Ctrl+Del"), KP.icon('LayersRemove'))
         l.addSeparator()
-        self.ld = add_action_compat(l,'Move Layer Up',              self.layerList.moveUp, QKeySequence("Ctrl+Up"))
-        self.le = add_action_compat(l,'Move Layer Down',            self.layerList.moveDown, QKeySequence("Ctrl+Down"))
-        self.lf = add_action_compat(l,'Move Layer to Top',          self.layerList.moveTop, QKeySequence("Ctrl+Shift+Up"))
-        self.lg = add_action_compat(l,'Move Layer to Bottom',       self.layerList.moveBottom, QKeySequence("Ctrl+Shift+Down"))
+        self.ld = add_action_compat(l,'Move Layer Up',              self.layerList.moveUp, QKeySequence("Ctrl+Up"), KP.icon('Up'))
+        self.le = add_action_compat(l,'Move Layer Down',            self.layerList.moveDown, QKeySequence("Ctrl+Down"), KP.icon('Down'))
         l.addSeparator()
-        self.li = add_action_compat(l,'Add Doodad',                 self.doodadSelector.addDoodadFromFile, QKeySequence("Ctrl+Shift+R"))
-        self.lh = add_action_compat(l,'Add Tileset',                self.moveTilesetToFolder, QKeySequence("Ctrl+Shift+T"))
-        self.lj = add_action_compat(l,'Change Tileset',             self.changeTileset, QKeySequence("Ctrl+Shift+Alt+T"))
+        self.lf = add_action_compat(l,'Move Layer to Top',          self.layerList.moveTop, QKeySequence("Ctrl+Shift+Up"), KP.icon('Top'))
+        self.lg = add_action_compat(l,'Move Layer to Bottom',       self.layerList.moveBottom, QKeySequence("Ctrl+Shift+Down"), KP.icon('Bottom'))
+        l.addSeparator()
+        self.lh = add_action_compat(l,'Import Doodad',              self.doodadSelector.addDoodadFromFile, QKeySequence("Ctrl+Shift+R"), KP.icon('DoodadAdd'))
+        self.li = add_action_compat(l,'Import Tileset',             self.moveTilesetToFolder, QKeySequence("Ctrl+Shift+T"), KP.icon('TilesetAdd'))
+        self.lj = add_action_compat(l,'Change Tileset',             self.changeTileset, QKeySequence("Ctrl+Shift+Alt+T"), KP.icon('TilesetChange'))
 
         m = mb.addMenu('Map')
-        self.ma = add_action_compat(m,'Play Animations',            self.playAnim, QKeySequence("Ctrl+P"))
-        self.mc = add_action_compat(m,'Reset Animations',           self.resetAnim, QKeySequence("Ctrl+Shift+P"))
+        self.ma = add_action_compat(m,'Play Animations',            self.playAnim, QKeySequence("Ctrl+P"), KP.icon('Play'))
+        self.mb = add_action_compat(m,'Pause Animations',            self.stopAnim, QKeySequence("Ctrl+Shift+P"), KP.icon('Pause'))
         m.addSeparator()
-        self.md = add_action_compat(m,'Import Animation Presets',   self.loadAnimPresets, QKeySequence("Ctrl+Alt+Shift+I"))
-        self.me = add_action_compat(m,'Export Animation Presets',   self.saveAnimPresets, QKeySequence("Ctrl+Alt+Shift+E"))
-        self.mf = add_action_compat(m,'Clear Animation Presets',    self.clearAnimPresets, QKeySequence("Ctrl+Alt+Shift+C"))
+        self.mc = add_action_compat(m,'Import Animation Presets',   self.loadAnimPresets, QKeySequence("Ctrl+Alt+Shift+I"), KP.icon('PresetOpen'))
+        self.md = add_action_compat(m,'Export Animation Presets',   self.saveAnimPresets, QKeySequence("Ctrl+Alt+Shift+E"), KP.icon('PresetExport'))
+        self.me = add_action_compat(m,'Clear Animation Presets',    self.clearAnimPresets, QKeySequence("Ctrl+Alt+Shift+C"), KP.icon('PresetRemove'))
         m.addSeparator()
-        self.mg = add_action_compat(m,'Set Background',             self.setMapBackground, QKeySequence("Ctrl+Shift+B"))
+        self.mf = add_action_compat(m,'Set Background',             self.setMapBackground, QKeySequence("Ctrl+Shift+B"), KP.icon('Background'))
         m.addSeparator()
-        self.mh = add_action_compat(m,'World Editor',               self.showWorldEditor, QKeySequence("Ctrl+Shift+W"))
+        self.mg = add_action_compat(m,'World Editor',               self.showWorldEditor, QKeySequence("Ctrl+Shift+W"), KP.icon('Globe'))
 
         v = mb.addMenu('View')
-        self.va = add_action_compat(v,'Change Grid Type',           self.showGrid, QKeySequence("Ctrl+G"))
+        self.va = add_action_compat(v,'Zoom In',                    self.ZoomIn, QKeySequence.StandardKey.ZoomIn, KP.icon('ZoomIn'))
+        self.vb = add_action_compat(v,'Zoom Out',                   self.ZoomOut, QKeySequence.StandardKey.ZoomOut, KP.icon('ZoomOut'))
         v.addSeparator()
-        self.vb = add_action_compat(v,'Zoom In',                   self.ZoomIn, QKeySequence.StandardKey.ZoomIn, KP.icon('ZoomIn'))
-        self.vc = add_action_compat(v,'Zoom Out',                   self.ZoomOut, QKeySequence.StandardKey.ZoomOut, KP.icon('ZoomOut'))
-        self.vd = add_action_compat(v,'Actual Size',                self.ZoomActual, QKeySequence("Ctrl+="))
-        self.vh = add_action_compat(v,'Show Wii Zoom',              self.showWiiZoom, QKeySequence("Ctrl+F"))
-        self.vh.setCheckable(True)
-        self.vi = add_action_compat(v,'Show Water/Lava Colors',     self.showHideBackgroundColor, QKeySequence("Ctrl+H"))
-        self.vi.setCheckable(True)
+        self.vc = add_action_compat(v,'Change Grid Type',           self.showGrid, QKeySequence("Ctrl+G"), KP.icon('Grid'))
+        v.addSeparator()
+        self.vd = add_action_compat(v,'Actual Size',                self.ZoomActual, QKeySequence("Ctrl+="), KP.icon('ActualSize'))
+        self.ve = add_action_compat(v,'Show Wii Zoom',              self.showWiiZoom, QKeySequence("Ctrl+F"), KP.icon('Wii'))
+        self.ve.setCheckable(True)
+        self.vf = add_action_compat(v,'Hide Water/Lava Colors',     self.showHideBackgroundColor, QKeySequence("Ctrl+H"), KP.icon('WaterLava'))
+        self.vf.setCheckable(True)
         v.addSeparator()
 
         layerAction = self.layerListDock.toggleViewAction()
         layerAction.setShortcut(QKeySequence("Ctrl+1"))
+        layerAction.setIcon(KP.icon('Layers'))
         v.addAction(layerAction)
 
         objectAction = self.objectSelectorDock.toggleViewAction()
         objectAction.setShortcut(QKeySequence("Ctrl+2"))
+        objectAction.setIcon(KP.icon('Objects'))
         v.addAction(objectAction)
 
         doodadAction = self.doodadSelectorDock.toggleViewAction()
         doodadAction.setShortcut(QKeySequence("Ctrl+3"))
+        doodadAction.setIcon(KP.icon('Doodad'))
         v.addAction(doodadAction)
 
         pathAction = self.pathNodeDock.toggleViewAction()
         pathAction.setShortcut(QKeySequence("Ctrl+4"))
+        pathAction.setIcon(KP.icon('Path'))
         v.addAction(pathAction)
 
         h = mb.addMenu('Help')
-        self.ha = add_action_compat(h,'About',                      self.aboutDialog, QKeySequence("Ctrl+Alt+Shift+A"))
-        self.hb = add_action_compat(h,'Documentation',              self.goToHelp, QKeySequence("Ctrl+Alt+Shift+D"))
+        self.ha = add_action_compat(h,'About',                      self.aboutDialog, QKeySequence("Ctrl+Alt+Shift+A"), KP.icon('Help'))
+        self.hb = add_action_compat(h,'Documentation',              self.openDocumentation, QKeySequence("Ctrl+Alt+Shift+D"), KP.icon('Document'))
 
     def setupDocks(self):
         self.layerList = KPLayerList()
@@ -1379,7 +1388,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         suffix = ''
         if len(doodadList) > 1:
             suffix = 's'
-        self.anmOptsDock.setWindowTitle("Editing {0} Doodad{1}".format(len(doodadList), suffix))
+        self.anmOptsDock.setWindowTitle("{0} Doodad{1} Selected".format(len(doodadList), suffix))
         self.anmOpts.setupAnms(doodadList)          
 
 
@@ -1410,6 +1419,12 @@ class KPMainWindow(QtWidgets.QMainWindow):
         #self.openMapFromPath(target)
         QtWidgets.QMessageBox.information(self, "Not quite...", "This feature is planned for a later release. For now, it looks like you have to open KPMAP files manually...")
 
+    def undo(self):
+        QtWidgets.QMessageBox.information(self, "Not quite...", "This feature is planned for a later release.")
+
+    def redo(self):
+        QtWidgets.QMessageBox.information(self, "Not quite...", "This feature is planned for a later release.")
+
     def openMapFromPath(self, target):
         import mapfile
         with open(target, 'rb') as file:
@@ -1432,11 +1447,14 @@ class KPMainWindow(QtWidgets.QMainWindow):
         reply = QtWidgets.QMessageBox.warning(self, "Warning", "Are you sure you want to quit? Any unsaved data will be lost.",
         QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel
         )
-        if reply == QtWidgets.QMessageBox.StandardButton.Ok:
-            self.close()
-        
+        return reply == QtWidgets.QMessageBox.StandardButton.Ok
+
     def closeEvent(self, event):
-        self.closeWarning()
+        if self.closeWarning():
+            event.accept()
+        else:
+            event.ignore()
+
 
     def saveMap(self, forceNewName=False):
         target = KP.map.filePath
@@ -1587,7 +1605,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
                 self.scene.addItem(q)
                 q.setSelected(True)
                 if self.scene.playing:
-                    self.resetAnim()
+                    self.stopAnim()
 
 
 # Layers
@@ -1645,7 +1663,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
             self.layerList.actPlayPause.setIcon(KP.icon('Play'))
             self.layerList.actPlayPause.setText('Play')
 
-    def resetAnim(self):
+    def stopAnim(self):
         if self.scene.playing == True:
             self.scene.playPause()
         self.scene.playPause()
@@ -1685,8 +1703,11 @@ class KPMainWindow(QtWidgets.QMainWindow):
         settings = KP.app.settings
         import mapfile
 
-        msg = QtWidgets.QMessageBox()
-        msg.setText("No Animation Presets Found.")
+        caption = "Export error"
+
+        text = "No animation presets found."
+
+        msg = QtWidgets.QMessageBox.critical(KP.mainWindow, caption, text)
 
         if settings.contains('AnimationPresets'):
             presetList = mapfile.load(settings.value('AnimationPresets'))
@@ -1696,7 +1717,6 @@ class KPMainWindow(QtWidgets.QMainWindow):
             return
 
         if len(presetList) == 0:
-            msg.exec()
             return
 
         path = QFileDialog_getSaveFileName(self,
@@ -1813,9 +1833,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
         
 
 
-        msg = QtWidgets.QMessageBox.a(KP.mainWindow, caption, text)
+        msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)
 
-    def goToHelp(self):
+    def openDocumentation(self):
         QtGui.QDesktopServices().openUrl(QtCore.QUrl('http://www.newerteam.com/koopatlas-help'))
 
 

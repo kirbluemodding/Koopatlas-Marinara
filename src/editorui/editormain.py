@@ -89,7 +89,7 @@ class KPMapScene(QtWidgets.QGraphicsScene):
                 starty -= (starty % 24)
                 endy = starty + rect.height() + 24
 
-                painter.setPen(QtGui.QPen(GridColor, 1, Qt.PenStyle.DotLine))
+                painter.setPen(QtGui.QPen(GridColor, 1, Qt.PenStyle.SolidLine))
 
                 x = startx
                 y1 = rect.top()
@@ -221,9 +221,9 @@ class KPMapScene(QtWidgets.QGraphicsScene):
     def drawBackground(self, painter, rect):
         #if 
         if KP.map.bgName == '/Maps/Water.brres' and settings.config["Window"]["water_lava_view"] == "True":
-            painter.fillRect(rect, QtGui.QColor(11, 180, 249))
+            painter.fillRect(rect, QtGui.QColor(38, 96, 153))
         elif KP.map.bgName == '/Maps/Lava.brres' and settings.config["Window"]["water_lava_view"] == "True":
-            painter.fillRect(rect, QtGui.QColor(255, 63, 0))
+            painter.fillRect(rect, QtGui.QColor(153, 38, 38))
         else:
             painter.fillRect(rect, QtGui.QColor(119, 136, 153))
 

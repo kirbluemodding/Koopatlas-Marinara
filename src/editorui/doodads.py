@@ -30,7 +30,7 @@ class KPEditorDoodad(KPEditorItem):
             doodad.setupAnimations()
 
         if not hasattr(KPEditorDoodad, 'SELECTION_PEN'):
-            KPEditorDoodad.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.red, 1, Qt.PenStyle.DotLine)
+            KPEditorDoodad.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.red, 1, Qt.PenStyle.SolidLine)
 
 
     def _updatePixmap(self):

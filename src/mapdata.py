@@ -90,7 +90,7 @@ class KPTileLayer(KPLayer):
         self.cache = ['DUMMY_FLAG']
         self.updateCache()
 
-        self.icon = KP.icon('LayerTile')
+        self.icon = KP.icon('Tileset')
 
     def _visibilityChanged(self, value):
         for obj in self.objects:
@@ -436,7 +436,7 @@ class KPDoodadLayer(KPLayer):
         KPLayer.__init__(self)
         self.objects = []
 
-        self.icon = KP.icon('LayerObjects')
+        self.icon = KP.icon('Doodad')
 
     def _visibilityChanged(self, value):
         for obj in self.objects:
@@ -549,7 +549,7 @@ class KPPathLayer(KPLayer):
         self.nodes = []
         self.paths = []
 
-        self.icon = KP.icon('LayerPath')
+        self.icon = KP.icon('Path')
 
     def _visibilityChanged(self, value):
         for objList in (self.nodes, self.paths):

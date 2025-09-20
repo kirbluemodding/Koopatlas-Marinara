@@ -43,7 +43,7 @@ class KPEditorNode(KPEditorItem):
             self.setIconSize(QtCore.QSize(24, 24))
             self.setFixedSize(24, 24)
 
-            self.iconList = [KP.icon('Through'), KP.icon('Level'), KP.icon('Exit'), KP.icon('WorldChange')]
+            self.iconList = [KP.icon('Through'), KP.icon('Through'), KP.icon('Through'), KP.icon('Through')]
 
             self.state = initialState
 
@@ -149,7 +149,7 @@ class KPEditorNode(KPEditorItem):
         self.isLayerSelected = False
 
         if not hasattr(KPEditorNode, 'SELECTION_PEN'):
-            KPEditorNode.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.blue, 1, Qt.PenStyle.DotLine)
+            KPEditorNode.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.blue, 1, Qt.PenStyle.SolidLine)
 
         if node.level:
             initialState = PATH_NODE_STATE_LEVEL
@@ -702,7 +702,7 @@ class KPEditorPath(QtWidgets.QGraphicsLineItem):
         self.setPen(KPEditorPath.PEN)
 
         if not hasattr(KPEditorPath, 'SELECTION_PEN'):
-            KPEditorPath.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.blue, 1, Qt.PenStyle.DotLine)
+            KPEditorPath.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.blue, 1, Qt.PenStyle.SolidLine)
 
         self.options = self.PathOptionsMenuButton(self._pathRef)
         self.optionsProxy = self.HiddenProxy(self.options)

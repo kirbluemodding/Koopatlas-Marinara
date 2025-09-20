@@ -15,13 +15,13 @@ Koopatlas $${\color{red}Marinara}$$ contains a few enhancements for Koopatlas Up
     - Shortcuts for almost every single option, as well
     - Cutting with Ctrl+X now functions properly (HOW was this never a feature before?!)
   - Almost every single piece of the UI can now be toggled on/off
+  - All options should have a new, more modern looking icon assigned to them (from <https://icons8.com/icons/all--style-color>)
   - The default viewport background color has been changed to be the same as Reggie-Next's, to better fit both light and dark mode
     - The background color now also changes color automatically if Water.brres or Lava.brres is set
 
 There are currently a few planned features for future releases as well, as listed:
 - Custom themes outside of light/dark mode
 - Custom background color definitions
-- Icons for every option, as well as replacements for the very outdated current set
 - Better World/Level ID spinner for nodes
 - Settings menu
 - "Open recents..." option functionality
@@ -30,6 +30,7 @@ There are currently a few planned features for future releases as well, as liste
 - Any and all crashes within the UI (or as many as can be found)
 - PyQt5 support, as well as PyQt4 support (maybe)
 - PyQt7+ support in the future
+- Undo/Redo
 
 If you have any ideas or suggestions for features/bugfixes, feel free to create an issue in this repository.
 

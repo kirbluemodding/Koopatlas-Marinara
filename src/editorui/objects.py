@@ -16,7 +16,7 @@ class KPEditorObject(KPEditorItem):
         self.resizing = None
 
         if not hasattr(KPEditorObject, 'SELECTION_PEN'):
-            KPEditorObject.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.green, 1, Qt.PenStyle.DotLine)
+            KPEditorObject.SELECTION_PEN = QtGui.QPen(Qt.GlobalColor.green, 1, Qt.PenStyle.SolidLine)
 
         # I don't bother setting the ZValue because it doesn't quite matter:
         # only one layer's objects are ever clickable, and drawBackground takes
