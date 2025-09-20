@@ -43,7 +43,7 @@ class KPEditorNode(KPEditorItem):
             self.setIconSize(QtCore.QSize(24, 24))
             self.setFixedSize(24, 24)
 
-            self.iconList = [KP.icon('Through'), KP.icon('Through'), KP.icon('Through'), KP.icon('Through')]
+            self.iconList = [KP.icon('Through'), KP.icon('Through'), KP.icon('Exit'), KP.icon('WorldChange')]
 
             self.state = initialState
 
