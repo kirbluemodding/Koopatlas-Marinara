@@ -380,7 +380,7 @@ class KPEditorNode(KPEditorItem):
             painter.setBrush(QtGui.QColor(0, 0, 0, 0))
             painter.setPen(QtGui.QColor(0, 0, 0, 0))
             randomSpecificCaseForNewerW1 = node.level[0] == 80 and node.level[1] == 80 # Yoshi's Island has this random node for world 80-80. I have no idea what this does, but might as well show that it's not really a level to anyone trying to edit the map file.
-            oneTimeLevel = node.level[1] == 31 or node.level[1] == 33 or node.level[1] == 34
+            oneTimeLevel = 30 <= node.level[1] <= 37
             if node.level[1] == 99:
                 pix = QtGui.QPixmap("Resources/Icon/ShopNode.png")
             elif oneTimeLevel:
