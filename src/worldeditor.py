@@ -1,4 +1,5 @@
 from common import *
+from PyQt6.QtGui import *
 import re
 
 def editableColourStr(array):
@@ -209,8 +210,9 @@ class KPWorldTableModel(QtCore.QAbstractTableModel):
 class KPWorldEditor(QtWidgets.QWidget):
     def __init__(self, kpmap, parent=None):
         QtWidgets.QWidget.__init__(self, parent, QtCore.Qt.WindowType.Window)
-        self.setWindowTitle('World Editor')
-        self.resize(750, 350)
+        self.setWindowTitle('World Editor - Koopatlas Marinara Edition')
+        self.setWindowIcon(QIcon('Resources/Icon/Globe.png')) 
+        self.resize(600, 200)
 
         self.dataView = QtWidgets.QTableView(self)
 

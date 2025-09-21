@@ -2,6 +2,7 @@ import configparser
 import os
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 
 settings_default = """
 [Window]
@@ -46,6 +47,11 @@ class KPSettings(QWidget):
         self.resize(300, 200)
         self.main_layout = QGridLayout()
         self.setLayout(self.main_layout)
+        self.setWindowTitle("Settings - Koopatlas Marinara Edition")
+        self.setWindowIcon(QIcon('Resources/Icon/Settings.png')) 
+        self.resize(500, 350)
+        main_layout = QGridLayout(self)
+        self.setLayout(main_layout)
 
         # create a tab widget
         self.tab = QTabWidget()
