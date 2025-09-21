@@ -833,7 +833,7 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
                 QtWidgets.QGraphicsView.mousePressEvent(self, event)
                 return
 
-            itemsUnder = self.scene().items(self.mapToScene(event.pos()), Qt.IntersectsItemShape, Qt.AscendingOrder)
+            itemsUnder = self.scene().items(self.mapToScene(event.pos()), Qt.ItemSelectionMode.IntersectsItemShape, Qt.SortOrder.AscendingOrder)
 
             if itemsUnder:
 

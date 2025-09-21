@@ -2,6 +2,7 @@ import configparser
 import os
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 
 settings_default = """
 [Window]
@@ -38,8 +39,9 @@ class settings:
 class KPSettings(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Settings")
-        self.resize(300, 200)
+        self.setWindowTitle("Settings - Koopatlas Marinara Edition")
+        self.setWindowIcon(QIcon('Resources/Icon/Settings.png')) 
+        self.resize(500, 350)
         main_layout = QGridLayout(self)
         self.setLayout(main_layout)
 
@@ -49,12 +51,14 @@ class KPSettings(QWidget):
         general_page = QWidget(self)
         general_layout = QFormLayout()
         general_page.setLayout(general_layout)
-        general_layout.addRow("Load last map open:", QCheckBox(self))
+        general_layout.addRow("Load last map open", QCheckBox(self))
 
         appearence_page = QWidget(self)
         appearence_layout = QFormLayout()
         appearence_page.setLayout(appearence_layout)
-        appearence_layout.addRow("Map Canvas", QLabel(self))
+        appearence_layout.addRow("Grid Type", QComboBox(self))
+        appearence_layout.addRow("Show Wii Zoom", QCheckBox(self))
+        appearence_layout.addRow("Water/Lava Colors", QCheckBox(self))
 
         # add pane to the tab widget
         tab.addTab(general_page, "General")

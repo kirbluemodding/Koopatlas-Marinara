@@ -512,8 +512,8 @@ class KPDoodadSelector(QtWidgets.QWidget):
 
         self.toolbar = QtWidgets.QToolBar()
 
-        self.addDoodadButton = self.toolbar.addAction(QtGui.QIcon(), 'Add', self.addDoodadFromFile)
-        self.removeDoodadButton = self.toolbar.addAction(QtGui.QIcon(), 'Remove', self.removeDoodad)
+        self.addDoodadButton = self.toolbar.addAction(KP.icon('DoodadAdd'), 'Import Doodad', self.addDoodadFromFile)
+        self.removeDoodadButton = self.toolbar.addAction(KP.icon('DoodadRemove'), 'Remove Doodad', self.removeDoodad)
 
         self.updateModel()
 
@@ -1100,6 +1100,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.editor)
 
         self.ZoomLevel = 5
+        self.zooms = [5.0, 10.0, 25.0, 50.0, 75.0, 100.0, 150.0, 200.0, 400.0]
 
         self.setupDocks()
         self.setupMenuBar()
@@ -1187,12 +1188,11 @@ class KPMainWindow(QtWidgets.QMainWindow):
         self.mg = add_action_compat(m,'World Editor',               self.showWorldEditor, QKeySequence("Ctrl+Shift+W"), KP.icon('Globe'))
 
         v = mb.addMenu('View')
-        self.va = add_action_compat(v,'Zoom In',                    self.ZoomIn, QKeySequence.StandardKey.ZoomIn, KP.icon('ZoomIn'))
-        self.vb = add_action_compat(v,'Zoom Out',                   self.ZoomOut, QKeySequence.StandardKey.ZoomOut, KP.icon('ZoomOut'))
+        self.va = add_action_compat(v,'Zoom In',                    self.ZoomIn, QKeySequence("Ctrl+K"), KP.icon('ZoomIn'))
+        self.vb = add_action_compat(v,'Zoom Out',                   self.ZoomOut, QKeySequence("Ctrl+L"), KP.icon('ZoomOut'))
+        self.vd = add_action_compat(v,'Reset Zoom',                 self.ZoomActual, QKeySequence("Ctrl+0"), KP.icon('ZoomReset'))
         v.addSeparator()
         self.vc = add_action_compat(v,'Change Grid Type',           self.showGrid, QKeySequence("Ctrl+G"), KP.icon('Grid'))
-        v.addSeparator()
-        self.vd = add_action_compat(v,'Actual Size',                self.ZoomActual, QKeySequence("Ctrl+="), KP.icon('ActualSize'))
         self.ve = add_action_compat(v,'Show Wii Zoom',              self.showWiiZoom, QKeySequence("Ctrl+F"), KP.icon('Wii'))
         self.ve.setCheckable(True)
         self.vf = add_action_compat(v,'Hide Water/Lava Colors',     self.showHideBackgroundColor, QKeySequence("Ctrl+H"), KP.icon('WaterLava'))
@@ -1748,10 +1748,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
 ########################
     def setMapBackground(self):
         from dialogs import getTextDialog
-        newBG = getTextDialog('Map Background', 'Enter a path (ex. /Maps/Water.brres, /Maps/Lava.brres):', KP.map.bgName)
+        newBG = getTextDialog('Set Background', 'Enter a path (ex. /Maps/Water.brres, /Maps/Lava.brres):', KP.map.bgName)
         if newBG is not None:
             KP.map.bgName = newBG
-        # whenever you change it to lava and it does that. So you have to update you're canvases.
         self.scene.update()
 
     def showWorldEditor(self):
@@ -1762,36 +1761,31 @@ class KPMainWindow(QtWidgets.QMainWindow):
 # Window
 ########################
     def ZoomActual(self):
-        """Handle zooming to the editor size"""
-        self.ZoomLevel = 5
+        """Reset to default zoom (100%)"""
+        if 100 in self.zooms:
+            self.ZoomLevel = self.zooms.index(100)
+        else:
+            self.ZoomLevel = len(self.zooms) // 2
         self.ZoomTo()
 
     def ZoomIn(self):
         """Handle zooming in"""
-        self.ZoomLevel += 1
-        self.ZoomTo()
+        if self.ZoomLevel < len(self.zooms) - 1:
+            self.ZoomLevel += 1
+            self.ZoomTo()
 
     def ZoomOut(self):
         """Handle zooming out"""
-        self.ZoomLevel -= 1
-        self.ZoomTo()
+        if self.ZoomLevel > 0:
+            self.ZoomLevel -= 1
+            self.ZoomTo()
 
     def ZoomTo(self):
         """Zoom to a specific level"""
+        scale = self.zooms[self.ZoomLevel] / 100.0
         tr = QtGui.QTransform()
-
-        zooms = [5.0, 10.0, 25.0, 50.0, 75.0, 100.0, 150.0, 200.0, 400.0]
-        scale = zooms[self.ZoomLevel] / 100.0
-
         tr.scale(scale, scale)
-
-
         self.editor.setTransform(tr)
-
-        self.vb.setEnabled(self.ZoomLevel != 8)
-        self.vc.setEnabled(self.ZoomLevel != 0)
-        self.vd.setEnabled(self.ZoomLevel != 5)
-        print(self.ZoomLevel)
         self.scene.update()
 
     def showGrid(self):
