@@ -50,8 +50,7 @@ class KPSettings(QWidget):
         self.setWindowTitle("Settings - Koopatlas Marinara Edition")
         self.setWindowIcon(QIcon('Resources/Icon/Settings.png')) 
         self.resize(500, 350)
-        main_layout = QGridLayout(self)
-        self.setLayout(main_layout)
+        self.setLayout(self.main_layout)
 
         # create a tab widget
         self.tab = QTabWidget()
