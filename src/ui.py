@@ -1220,7 +1220,8 @@ class KPMainWindow(QtWidgets.QMainWindow):
         v.addAction(pathAction)
 
         h = mb.addMenu('Help')
-        self.ha = add_action_compat(h,'About',                      self.aboutDialog, QKeySequence("Ctrl+Alt+Shift+A"), KP.icon('Help'))
+        self.ha = add_action_compat(h,'About',                      self.aboutDialog, QKeySequence("Ctrl+Alt+Shift+A"), KP.icon('Koopatlas'))
+        self.hc = add_action_compat(h,"About PyQt6",                   self.aboutPyQt6,  QKeySequence("Ctrl+Alt+Shift+Q"), KP.icon('AboutPyQt6'))
         self.hb = add_action_compat(h,'Documentation',              self.openDocumentation, QKeySequence("Ctrl+Alt+Shift+D"), KP.icon('Document'))
 
     def setupDocks(self):
@@ -1820,7 +1821,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
     def aboutDialog(self):
         caption = "About Koopatlas Marinara"
 
-        text = "<big><b>Koopatlas</b></big><br><br>" \
+        text = "<h1><b>Koopatlas</b></h1>" \
         "<p>The Koopatlas Editor is an editor for custom two dimensional world maps, for use with the NewerSMBW world map engine. It should be used in tandem with its companion program, Koopuzzle, which creates tilesets for use with Koopatlas.<br><br>" \
         "Koopatlas was programmed by Treeki and Tempus of the Newer Team.<br><br>" \
         "Koopatlas <span style=\"color:red;\">𝓜𝓪𝓻𝓲𝓷𝓪𝓻𝓪</span> is a fork of Koopatlas, enhanced with RoadrunnerWMC's bugfixes from Koopatlas-Updated and many other planned/released features."
@@ -1828,6 +1829,9 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
 
         msg = QtWidgets.QMessageBox.about(KP.mainWindow, caption, text)
+
+    def aboutPyQt6(self):
+        msg = QtWidgets.QMessageBox.aboutQt(KP.mainWindow)
 
     def openDocumentation(self):
         QtGui.QDesktopServices().openUrl(QtCore.QUrl('http://www.newerteam.com/koopatlas-help'))
