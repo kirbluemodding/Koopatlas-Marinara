@@ -1547,10 +1547,10 @@ class KPMainWindow(QtWidgets.QMainWindow):
 
 
     def showHideBackgroundColor(self):
-        if settings.config["Window"]["water_lava_view"] == "True":
-            settings.config["Window"]["water_lava_view"] = "False"
+        if settings.config["Window"]["background"] == "False":
+            settings.config["Window"]["background"] = "True"
         else:
-            settings.config["Window"]["water_lava_view"] = "True"
+            settings.config["Window"]["background"] = "False"
         self.refreshMapState()
 
 

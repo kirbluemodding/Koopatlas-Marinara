@@ -37,7 +37,7 @@ class KP:
     
         KP.enumerateTilesets()
         print(WAITING)
-        if settings.config["File"]["OpenLastMap"] == "1":
+        if settings.config["File"]["OpenLastMap"] == "True":
             KP.mainWindow.loadLastMap()
 
         KP.mainWindow.show()

@@ -97,6 +97,9 @@ def load(string):
         corruptMapError()
         return
 
+    # Re-write: DO THE loading bar
+    total = 0
+    n = 0
     for obj, source in needsSpecialCare:
         obj._load(root, source)
 

@@ -219,11 +219,14 @@ class KPMapScene(QtWidgets.QGraphicsScene):
 
 
     def drawBackground(self, painter, rect):
-        #if 
-        if KP.map.bgName == '/Maps/Water.brres' and settings.config["Window"]["water_lava_view"] == "True":
-            painter.fillRect(rect, QtGui.QColor(38, 96, 153))
-        elif KP.map.bgName == '/Maps/Lava.brres' and settings.config["Window"]["water_lava_view"] == "True":
-            painter.fillRect(rect, QtGui.QColor(153, 38, 38))
+        if settings.config["Window"]["background"] == "True":
+            if settings.config["Window"]["backgroundType"] == "water_lava_view":
+                if KP.map.bgName == '/Maps/Water.brres':
+                    painter.fillRect(rect, QtGui.QColor(11, 180, 249))
+                elif KP.map.bgName == '/Maps/Lava.brres':
+                    painter.fillRect(rect, QtGui.QColor(255, 63, 0))
+            #elif settings.config["Window"]["backgroundType"] == "custom":
+                #painter.fillRect(rect, QtGui.QColor())
         else:
             painter.fillRect(rect, QtGui.QColor(119, 136, 153))
 
