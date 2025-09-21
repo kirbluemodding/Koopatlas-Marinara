@@ -1552,7 +1552,7 @@ class KPMainWindow(QtWidgets.QMainWindow):
             settings.config["Window"]["background"] = "True"
         else:
             settings.config["Window"]["background"] = "False"
-        self.refreshMapState()
+        KP.mainWindow.editor.viewport().update()
 
 
 
