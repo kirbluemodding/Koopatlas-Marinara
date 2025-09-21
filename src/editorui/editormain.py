@@ -826,7 +826,8 @@ class KPEditorWidget(QtWidgets.QGraphicsView):
 
 
     def mousePressEvent(self, event):
-
+        # prevent smearing of some widgets
+        KP.mainWindow.editor.viewport().update()
         if event.button() == QtCore.Qt.MouseButton.RightButton:
             self._tryToPaint(event)
             event.accept()
